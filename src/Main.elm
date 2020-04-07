@@ -33,7 +33,6 @@ type alias Model =
     { currentPage : Page
     , timeZone : Time.Zone
     , time : Time.Posix
-    , body : String
     }
 
 
@@ -42,7 +41,6 @@ init =
     ( { currentPage = AboutMe
       , timeZone = utc
       , time = millisToPosix 0
-      , body = "Hello World"
       }
     , Task.perform AdjustTimeZone Time.here
     )
@@ -61,7 +59,6 @@ type Link
 
 type Msg
     = ChangePage Page
-    | LoadPage
     | OpenLink Link
     | ClockTick Time.Posix
     | AdjustTimeZone Time.Zone
@@ -72,9 +69,6 @@ update msg model =
     case msg of
         ChangePage page ->
             ( { model | currentPage = page }, Cmd.none )
-
-        LoadPage ->
-            ( { model | body = "ijiji" }, Cmd.none )
 
         OpenLink _ ->
             ( model, Cmd.none )
@@ -122,15 +116,43 @@ viewBox : Model -> Html Msg
 viewBox model =
     div
         [ css
-            [ displayFlex
-            , fontFamilies mainFonts
-            , margin2 zero zero
-            , border3 (px 1.5) solid (hex primaryColor)
+            [ border3 (px 1.5) solid (hex primaryColor)
             ]
         ]
-        [ div [css [marginLeft (rem 2)]] [viewOptionBox "About Me" AboutMe model]
-        , div [ css [ margin2 zero (rem 2) ] ] [ viewOptionBox "My Interests" MyInterests model ]
-        , viewOptionBox "My Work" MyWork model
+        [ div
+            [ css
+                [ displayFlex
+                , fontFamilies mainFonts
+                , margin2 zero zero
+                ]
+            ]
+            [ div [ css [ marginLeft (rem 2) ] ] [ viewOptionBox "About Me" AboutMe model ]
+            , div [ css [ margin2 zero (rem 2) ] ] [ viewOptionBox "My Interests" MyInterests model ]
+            , viewOptionBox "My Work" MyWork model
+            ]
+        , div
+            [ css
+                [ padding (rem 2)
+                , fontFamilies mainFonts
+                ]
+            ]
+            [ viewBodyBox model
+            ]
+        ]
+
+
+viewBodyBox : Model -> Html Msg
+viewBodyBox model =
+    div []
+        [ case model.currentPage of
+            AboutMe ->
+                text "about"
+
+            MyInterests ->
+                text "interests"
+
+            MyWork ->
+                text "works"
         ]
 
 
