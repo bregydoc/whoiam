@@ -1,8 +1,8 @@
 module Owl exposing (viewDefaultOwl, viewOwl)
 
-import Html exposing (Html)
-import Svg exposing (path, svg)
-import Svg.Attributes exposing (d, fill, height, stroke, strokeWidth, viewBox, width)
+import Html.Styled exposing (Html)
+import Svg.Styled exposing (path, svg)
+import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeWidth, viewBox, width)
 
 
 viewOwl : ( Int, Int ) -> String -> Html msg
