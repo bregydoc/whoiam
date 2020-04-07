@@ -3,8 +3,11 @@ module Main exposing (Link(..), Msg(..), Page(..), main)
 import Battery exposing (viewBattery)
 import Browser
 import Css exposing (..)
+import Css.Transitions exposing (transition)
+import Head exposing (headNameAndTag, viewHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Html.Styled.Events exposing (onClick)
 import Life exposing (lifePercent)
 import Owl exposing (viewDefaultOwl)
 import Round
@@ -98,7 +101,7 @@ viewStatusBar model =
                 -- , align center
                 ]
             ]
-            [ text <| Round.round 2 <| lifePercent model.timeZone model.time * 100
+            [ text ((Round.round 2 <| lifePercent model.timeZone model.time * 100) ++ "%")
             , div
                 [ css
                     [ marginLeft (rem 0.5)
@@ -115,64 +118,52 @@ viewStatusBar model =
             ]
 
 
-viewHead : Model -> Html Msg
-viewHead model =
+viewBox : Model -> Html Msg
+viewBox model =
     div
         [ css
-            [ fontFamilies mainFonts
+            [ displayFlex
+            , fontFamilies mainFonts
+            , margin2 zero zero
+            , border3 (px 1.5) solid (hex primaryColor)
             ]
         ]
-        [ div []
-            [ h2
-                [ css
-                    [ fontSize (rem 3)
-                    , margin4 (rem 3) zero zero zero
-                    , fontWeight normal
-                    , opacity (num 0.52)
-                    ]
+        [ div [css [marginLeft (rem 2)]] [viewOptionBox "About Me" AboutMe model]
+        , div [ css [ margin2 zero (rem 2) ] ] [ viewOptionBox "My Interests" MyInterests model ]
+        , viewOptionBox "My Work" MyWork model
+        ]
+
+
+viewOptionBox : String -> Page -> Model -> Html Msg
+viewOptionBox title page model =
+    div
+        [ css
+            [ color <|
+                if model.currentPage == page then
+                    hex bgColor
+
+                else
+                    hex primaryColor
+            , padding2 (rem 0.6) (rem 0.8)
+            , backgroundColor <|
+                if model.currentPage == page then
+                    hex primaryColor
+
+                else
+                    hex bgColor
+            , transforms [ translateY (rem -1.2), translateX (rem -0.121) ]
+            , hover
+                [ cursor pointer
+                , backgroundColor (hex primaryColor)
+                , color (hex bgColor)
                 ]
-                [ text "Hello," ]
-            , div
-                [ css
-                    [ displayFlex
-                    , margin4 (rem 0.6) zero (rem 1.4) zero
-                    ]
-                ]
-                [ div
-                    [ css
-                        [ fontSize (rem 3)
-                        , fontWeight normal
-                        , opacity (num 0.52)
-                        ]
-                    ]
-                    [ text "I'm" ]
-                , h1
-                    [ css
-                        [ marginTop zero
-                        , marginBottom zero
-                        , marginLeft (rem 2)
-                        , fontSize (rem 3)
-                        , fontWeight normal
-                        , opacity (num 0.52)
-                        , fontWeight bold
-                        , opacity (num 1)
-                        ]
-                    ]
-                    [ text "Bregy Malpartida" ]
-                ]
-            , div
-                [ css
-                    [ fontSize (rem 1)
-                    , color (hex secondaryColor)
-                    , opacity (num 0.64)
-                    ]
-                ]
-                [ h3 []
-                    [ text "Passionate about human knowledge"
-                    ]
+            , transition
+                [ Css.Transitions.backgroundColor 333
                 ]
             ]
+        , onClick <| ChangePage page
         ]
+        [ text title ]
 
 
 
@@ -190,7 +181,8 @@ view model =
             ]
         ]
         [ viewStatusBar model
-        , viewHead model
+        , viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+        , viewBox model
 
         -- , viewDefaultOwl primaryColor
         ]

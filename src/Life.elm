@@ -1,12 +1,12 @@
 module Life exposing (birthDay, lifePercent, lifeSpan)
 
 import Time exposing (Month(..))
-import Time.Extra as Time
+import Time.Extra
 
 
 birthDay : Time.Zone -> Time.Posix
 birthDay zone =
-    Time.Parts 1996 Feb 18 12 0 0 0 |> Time.partsToPosix zone
+    Time.Extra.Parts 1996 Feb 18 12 0 0 0 |> Time.Extra.partsToPosix zone
 
 
 lifeSpan : Int
@@ -22,6 +22,6 @@ lifePercent : Time.Zone -> Time.Posix -> Float
 lifePercent zone now =
     let
         age =
-            Time.diff Time.Year zone (birthDay zone) now
+            Time.Extra.diff Time.Extra.Year zone (birthDay zone) now
     in
     toFloat age / toFloat lifeSpan
