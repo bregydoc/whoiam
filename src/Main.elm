@@ -13,7 +13,7 @@ import Owl exposing (viewDefaultOwl)
 import Round
 import StatusTime exposing (timeToDate, timeToStr)
 import Task
-import Theme exposing (bgColor, mainFonts, primaryColor, secondaryColor)
+import Theme exposing (bgColor, mainFonts, primaryColor)
 import Time exposing (Month(..), millisToPosix, utc)
 import Time.Extra as Time
 
@@ -146,13 +146,16 @@ viewBodyBox model =
     div []
         [ case model.currentPage of
             AboutMe ->
-                text "about"
+                div [ css [ displayFlex ] ]
+                    [ div [ css [ flexGrow (num 1) ] ] [ text "Work in progress" ]
+                    , div [] [ viewDefaultOwl primaryColor ]
+                    ]
 
             MyInterests ->
-                text "interests"
+                text "here will be my interests"
 
             MyWork ->
-                text "works"
+                text "here will be my works"
         ]
 
 
@@ -196,17 +199,23 @@ view : Model -> Html Msg
 view model =
     div
         [ css
-            [ padding2 (rem 2) (rem 4)
+            [ minHeight (vh 100)
             , backgroundColor (hex bgColor)
-            , margin zero
-            , color (hex primaryColor)
             ]
         ]
-        [ viewStatusBar model
-        , viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
-        , viewBox model
+        [ div
+            [ css
+                [ padding2 (rem 2) (rem 4)
+                , margin zero
+                , color (hex primaryColor)
+                ]
+            ]
+            [ viewStatusBar model
+            , viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+            , viewBox model
 
-        -- , viewDefaultOwl primaryColor
+            -- , viewDefaultOwl primaryColor
+            ]
         ]
 
 
