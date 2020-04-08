@@ -1,4 +1,4 @@
-module Main exposing (Link(..), Msg(..), Page(..), main)
+module Main exposing (Msg(..), Page(..), main)
 
 import Battery exposing (viewBattery)
 import Browser
@@ -10,6 +10,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Life exposing (lifePercent)
+import Link exposing (Link, viewSocialLink)
 import Owl exposing (viewDefaultOwl)
 import Round
 import StatusTime exposing (timeToDate, timeToStr)
@@ -51,13 +52,6 @@ init =
 ---- UPDATE ----
 
 
-type Link
-    = Email String
-    | Github String
-    | LinkedIn String
-    | Phone String
-
-
 type Msg
     = ChangePage Page
     | OpenLink Link
@@ -92,8 +86,6 @@ viewStatusBar model =
                 [ displayFlex
                 , fontFamilies mainFonts
                 , alignItems center
-
-                -- , align center
                 ]
             ]
             [ text ((Round.round 2 <| lifePercent model.timeZone model.time * 100) ++ "%")
@@ -222,7 +214,28 @@ view model =
                 ]
             ]
             [ viewStatusBar model
-            , viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+            , div
+                [ css
+                    [ displayFlex
+                    , justifyContent spaceBetween
+                    ]
+                ]
+                [ viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+                , div []
+                    [ div
+                        [ css
+                            [ displayFlex
+                            , flexFlow1 column
+                            , alignItems flexEnd
+                            ]
+                        ]
+                        [ viewSocialLink <| Link.Email "bregy.malpartida@utec.edu.pe"
+                        , viewSocialLink <| Link.Github "github.com/bregydoc"
+                        , viewSocialLink <| Link.LinkedIn "linkedin/bregy"
+                        , viewSocialLink <| Link.Phone "+51957821858"
+                        ]
+                    ]
+                ]
             , viewBox model
 
             -- , viewDefaultOwl primaryColor
