@@ -2,6 +2,7 @@ module Main exposing (Link(..), Msg(..), Page(..), main)
 
 import Battery exposing (viewBattery)
 import Browser
+import Content.About exposing (aboutBody)
 import Css exposing (..)
 import Css.Transitions exposing (transition)
 import Head exposing (headNameAndTag, viewHead)
@@ -146,9 +147,19 @@ viewBodyBox model =
     div []
         [ case model.currentPage of
             AboutMe ->
-                div [ css [ displayFlex ] ]
-                    [ div [ css [ flexGrow (num 1) ] ] [ text "Work in progress" ]
-                    , div [] [ viewDefaultOwl primaryColor ]
+                div
+                    [ css [ displayFlex ]
+                    ]
+                    [ div
+                        [ css
+                            [ flexGrow (num 1)
+                            , paddingRight (rem 1)
+                            , lineHeight (rem 2)
+                            ]
+                        ]
+                        [ text aboutBody ]
+                    , div []
+                        [ viewDefaultOwl primaryColor ]
                     ]
 
             MyInterests ->
