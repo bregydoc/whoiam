@@ -1,6 +1,5 @@
-module Main exposing (Msg(..), Page(..), main)
+module Main exposing (main)
 
-import Battery exposing (viewBattery)
 import Browser
 import Browser.Navigation as Navigator
 import Content.About exposing (aboutBody)
@@ -10,11 +9,10 @@ import Head exposing (headNameAndTag, viewHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Life exposing (lifePercent)
 import Link exposing (Link, viewSocialLink)
 import Owl exposing (viewDefaultOwl)
-import Round
-import StatusTime exposing (timeToDate, timeToStr)
+import Page exposing (Page, renderOptionPage, renderPage)
+import StatusBar exposing (renderStatusBar)
 import Task
 import Theme exposing (bgColor, mainFonts, primaryColor)
 import Time exposing (Month(..), millisToPosix, utc)
@@ -23,12 +21,6 @@ import Time exposing (Month(..), millisToPosix, utc)
 
 -- HELPERS
 ---- MODEL ----
-
-
-type Page
-    = AboutMe
-    | MyInterests
-    | MyWork
 
 
 type alias Model =
@@ -40,7 +32,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { currentPage = AboutMe
+    ( { currentPage = Page.AboutMe
       , timeZone = utc
       , time = millisToPosix 0
       }
@@ -57,6 +49,7 @@ type Msg
     | OpenLink String
     | ClockTick Time.Posix
     | AdjustTimeZone Time.Zone
+    | OpenSettings
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,35 +67,8 @@ update msg model =
         ClockTick time ->
             ( { model | time = time }, Cmd.none )
 
-
-viewStatusBar : Model -> Html Msg
-viewStatusBar model =
-    if model.time == millisToPosix 0 then
-        div [] []
-
-    else
-        div
-            [ css
-                [ displayFlex
-                , fontFamilies mainFonts
-                , alignItems center
-                ]
-            ]
-            [ text ((Round.round 2 <| lifePercent model.timeZone model.time * 100) ++ "%")
-            , div
-                [ css
-                    [ marginLeft (rem 0.5)
-                    , marginRight (rem 0.5)
-                    , alignItems center
-                    , paddingTop (rem 0.1)
-                    ]
-                ]
-                [ viewBattery ]
-            , text " | "
-            , text <| timeToDate model.timeZone model.time -- "Tue Apr 7"
-            , text " | "
-            , text <| timeToStr model.timeZone model.time
-            ]
+        OpenSettings ->
+            ( model, Cmd.none )
 
 
 viewBox : Model -> Html Msg
@@ -127,15 +93,23 @@ viewBox model =
                     [ marginLeft (rem 2)
                     ]
                 ]
-                [ viewOptionBox "About Me" AboutMe model ]
+                [ ChangePage Page.AboutMe
+                    |> renderOptionPage "About Me" model.currentPage Page.AboutMe
+                ]
             , div
                 [ css
                     [ margin2 zero (rem 2)
                     ]
                 ]
-                [ viewOptionBox "My Interests" MyInterests model ]
-            , div []
-                [ viewOptionBox "My Work" MyWork model ]
+                [ ChangePage Page.MyInterests
+                    |> renderOptionPage "My Interests" model.currentPage Page.MyInterests
+                ]
+            , div
+                [ css []
+                ]
+                [ ChangePage Page.MyInterests
+                    |> renderOptionPage "My Work" model.currentPage Page.MyWork
+                ]
             ]
         , div
             [ css
@@ -143,79 +117,9 @@ viewBox model =
                 , fontFamilies mainFonts
                 ]
             ]
-            [ viewBodyBox model
+            [ renderPage model.currentPage
             ]
         ]
-
-
-viewBodyBox : Model -> Html Msg
-viewBodyBox model =
-    div []
-        [ case model.currentPage of
-            AboutMe ->
-                div
-                    [ css [ displayFlex ]
-                    ]
-                    [ div
-                        [ css
-                            [ flexGrow (num 1)
-                            , paddingRight (rem 1)
-                            , lineHeight (rem 2)
-                            ]
-                        ]
-                        [ aboutBody ]
-                    , div []
-                        [ viewDefaultOwl primaryColor ]
-                    ]
-
-            MyInterests ->
-                text "here will be my interests"
-
-            MyWork ->
-                text "here will be my works"
-        ]
-
-
-viewOptionBox : String -> Page -> Model -> Html Msg
-viewOptionBox title page model =
-    div
-        [ css
-            [ if model.currentPage == page then
-                color <| hex bgColor
-
-              else
-                color <| hex primaryColor
-
-            --
-            , if model.currentPage == page then
-                backgroundColor <| hex primaryColor
-
-              else
-                backgroundColor <| hex bgColor
-
-            --
-            , if model.currentPage == page then
-                fontWeight bold
-
-              else
-                fontWeight normal
-
-            --
-            , padding2 (rem 0.6) (rem 0.8)
-            , transforms [ translateY (rem -1.2) ]
-            , hover
-                [ cursor pointer
-                , backgroundColor (hex primaryColor)
-                , color (hex bgColor)
-                ]
-            , transition
-                [ Css.Transitions.backgroundColor 333
-                , Css.Transitions.fontWeight 333
-                ]
-            ]
-        , onClick <| ChangePage page
-        ]
-        [ text title ]
 
 
 renderSocialNetworks : Html Msg
@@ -225,12 +129,17 @@ renderSocialNetworks =
             [ displayFlex
             , flexFlow1 column
             , alignItems flexEnd
+            , marginTop (rem 3)
             ]
         ]
-        [ viewSocialLink (OpenLink "mailto:bregy.malpartida@utec.edu.pe") <| Link.Email "bregy.malpartida@utec.edu.pe"
-        , viewSocialLink (OpenLink "https://github.com/bregydoc") <| Link.Github "github.com/bregydoc"
-        , viewSocialLink (OpenLink "https://linkedin.com/in/bregy") <| Link.LinkedIn "linkedin/bregy"
-        , viewSocialLink (OpenLink "phone:+51957821858") <| Link.Phone "+51957821858"
+        [ OpenLink "mailto:bregy.malpartida@utec.edu.pe"
+            |> viewSocialLink (Link.Email "bregy.malpartida@utec.edu.pe")
+        , OpenLink "https://github.com/bregydoc"
+            |> viewSocialLink (Link.Github "github.com/bregydoc")
+        , OpenLink "https://linkedin.com/in/bregy"
+            |> viewSocialLink (Link.LinkedIn "linkedin/bregy")
+        , OpenLink "phone:+51957821858"
+            |> viewSocialLink (Link.Phone "+51957821858")
         ]
 
 
@@ -253,7 +162,7 @@ view model =
                 , color (hex primaryColor)
                 ]
             ]
-            [ viewStatusBar model
+            [ OpenSettings |> renderStatusBar model.timeZone model.time
             , div
                 [ css
                     [ displayFlex

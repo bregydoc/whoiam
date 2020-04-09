@@ -54,8 +54,8 @@ viewSocialLayout open title icon =
         ]
 
 
-viewSocialLink : msg -> Link -> Html msg
-viewSocialLink open link =
+viewSocialLink : Link -> msg -> Html msg
+viewSocialLink link open =
     case link of
         Email value ->
             viewSocialLayout open value <| viewMail primaryColor
