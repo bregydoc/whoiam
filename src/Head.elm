@@ -69,7 +69,7 @@ viewHead head =
                         , opacity (num 0.64)
                         ]
                     ]
-                    [ h3 []
+                    [ h3 [ css [ fontWeight normal ] ]
                         [ text tag
                         ]
                     ]

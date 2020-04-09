@@ -2,6 +2,7 @@ module Main exposing (Msg(..), Page(..), main)
 
 import Battery exposing (viewBattery)
 import Browser
+import Browser.Navigation as Navigator
 import Content.About exposing (aboutBody)
 import Css exposing (..)
 import Css.Transitions exposing (transition)
@@ -17,7 +18,6 @@ import StatusTime exposing (timeToDate, timeToStr)
 import Task
 import Theme exposing (bgColor, mainFonts, primaryColor)
 import Time exposing (Month(..), millisToPosix, utc)
-import Time.Extra as Time
 
 
 
@@ -54,7 +54,7 @@ init =
 
 type Msg
     = ChangePage Page
-    | OpenLink Link
+    | OpenLink String
     | ClockTick Time.Posix
     | AdjustTimeZone Time.Zone
 
@@ -65,8 +65,8 @@ update msg model =
         ChangePage page ->
             ( { model | currentPage = page }, Cmd.none )
 
-        OpenLink _ ->
-            ( model, Cmd.none )
+        OpenLink link ->
+            ( model, Navigator.load link )
 
         AdjustTimeZone zone ->
             ( { model | timeZone = zone }, Cmd.none )
@@ -109,7 +109,10 @@ viewBox : Model -> Html Msg
 viewBox model =
     div
         [ css
-            [ border3 (px 1.5) solid (hex primaryColor)
+            [ border3 (px 1.0) solid (hex primaryColor)
+            , transition
+                [ Css.Transitions.height 333
+                ]
             ]
         ]
         [ div
@@ -119,9 +122,20 @@ viewBox model =
                 , margin2 zero zero
                 ]
             ]
-            [ div [ css [ marginLeft (rem 2) ] ] [ viewOptionBox "About Me" AboutMe model ]
-            , div [ css [ margin2 zero (rem 2) ] ] [ viewOptionBox "My Interests" MyInterests model ]
-            , viewOptionBox "My Work" MyWork model
+            [ div
+                [ css
+                    [ marginLeft (rem 2)
+                    ]
+                ]
+                [ viewOptionBox "About Me" AboutMe model ]
+            , div
+                [ css
+                    [ margin2 zero (rem 2)
+                    ]
+                ]
+                [ viewOptionBox "My Interests" MyInterests model ]
+            , div []
+                [ viewOptionBox "My Work" MyWork model ]
             ]
         , div
             [ css
@@ -149,7 +163,7 @@ viewBodyBox model =
                             , lineHeight (rem 2)
                             ]
                         ]
-                        [ text aboutBody ]
+                        [ aboutBody ]
                     , div []
                         [ viewDefaultOwl primaryColor ]
                     ]
@@ -166,20 +180,29 @@ viewOptionBox : String -> Page -> Model -> Html Msg
 viewOptionBox title page model =
     div
         [ css
-            [ color <|
-                if model.currentPage == page then
-                    hex bgColor
+            [ if model.currentPage == page then
+                color <| hex bgColor
 
-                else
-                    hex primaryColor
+              else
+                color <| hex primaryColor
+
+            --
+            , if model.currentPage == page then
+                backgroundColor <| hex primaryColor
+
+              else
+                backgroundColor <| hex bgColor
+
+            --
+            , if model.currentPage == page then
+                fontWeight bold
+
+              else
+                fontWeight normal
+
+            --
             , padding2 (rem 0.6) (rem 0.8)
-            , backgroundColor <|
-                if model.currentPage == page then
-                    hex primaryColor
-
-                else
-                    hex bgColor
-            , transforms [ translateY (rem -1.2), translateX (rem -0.121) ]
+            , transforms [ translateY (rem -1.2) ]
             , hover
                 [ cursor pointer
                 , backgroundColor (hex primaryColor)
@@ -187,11 +210,28 @@ viewOptionBox title page model =
                 ]
             , transition
                 [ Css.Transitions.backgroundColor 333
+                , Css.Transitions.fontWeight 333
                 ]
             ]
         , onClick <| ChangePage page
         ]
         [ text title ]
+
+
+renderSocialNetworks : Html Msg
+renderSocialNetworks =
+    div
+        [ css
+            [ displayFlex
+            , flexFlow1 column
+            , alignItems flexEnd
+            ]
+        ]
+        [ viewSocialLink (OpenLink "mailto:bregy.malpartida@utec.edu.pe") <| Link.Email "bregy.malpartida@utec.edu.pe"
+        , viewSocialLink (OpenLink "https://github.com/bregydoc") <| Link.Github "github.com/bregydoc"
+        , viewSocialLink (OpenLink "https://linkedin.com/in/bregy") <| Link.LinkedIn "linkedin/bregy"
+        , viewSocialLink (OpenLink "phone:+51957821858") <| Link.Phone "+51957821858"
+        ]
 
 
 
@@ -222,23 +262,9 @@ view model =
                 ]
                 [ viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
                 , div []
-                    [ div
-                        [ css
-                            [ displayFlex
-                            , flexFlow1 column
-                            , alignItems flexEnd
-                            ]
-                        ]
-                        [ viewSocialLink <| Link.Email "bregy.malpartida@utec.edu.pe"
-                        , viewSocialLink <| Link.Github "github.com/bregydoc"
-                        , viewSocialLink <| Link.LinkedIn "linkedin/bregy"
-                        , viewSocialLink <| Link.Phone "+51957821858"
-                        ]
-                    ]
+                    [ renderSocialNetworks ]
                 ]
             , viewBox model
-
-            -- , viewDefaultOwl primaryColor
             ]
         ]
 
