@@ -1,6 +1,11 @@
-module Theme exposing (bgColor, mainFonts, primaryColor, secondaryColor)
+module Theme exposing (Theme(..), bgColor, mainFonts, primaryColor, secondaryColor)
 
 -- Theme information
+
+
+type Theme
+    = Light
+    | Dark
 
 
 mainFonts : List String
