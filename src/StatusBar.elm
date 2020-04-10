@@ -5,7 +5,7 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Life exposing (lifePercent)
+import LifeSpan exposing (lifePercent)
 import Round
 import StatusTime exposing (timeToDate, timeToStr)
 import Theme exposing (mainFonts, primaryColor)

@@ -1,6 +1,7 @@
 module Page exposing (Page(..), renderPages)
 
 import Content.About exposing (aboutBody)
+import Content.Minsky exposing (minskyBody)
 import Content.MyInterests exposing (myInterestsBody)
 import Content.MyWork exposing (myWorkBody)
 import Css exposing (..)
@@ -15,6 +16,7 @@ type Page
     = AboutMe
     | MyInterests
     | MyWork
+    | Minsky
 
 
 renderOptionButton : Page -> ( Page, msg ) -> Html msg
@@ -30,6 +32,9 @@ renderOptionButton currentPage ( page, msg ) =
 
                 MyWork ->
                     "My work"
+
+                Minsky ->
+                    "Minsky"
     in
     div
         [ css
@@ -113,6 +118,9 @@ renderPages currentPage pages =
 
                     MyWork ->
                         myWorkBody
+
+                    Minsky ->
+                        minskyBody
                 ]
             ]
         ]

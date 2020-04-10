@@ -1,4 +1,4 @@
-module Life exposing (birthDay, lifePercent, lifeSpan)
+module LifeSpan exposing (birthDay, lifePercent, lifeSpan)
 
 import Time exposing (Month(..))
 import Time.Extra

@@ -8,10 +8,12 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Link exposing (Link, viewSocialLink)
 import Page exposing (Page, renderPages)
-import Settings exposing (LangSetting, ThemeSetting, renderModal)
+import Settings.Languages exposing (LangSetting)
+import Settings.Settings exposing (Settings, renderSettingsModal)
+import Settings.Themes exposing (ThemeSetting)
 import StatusBar exposing (renderStatusBar)
 import Task
-import Theme exposing (Theme, bgColor, mainFonts, primaryColor)
+import Theme exposing (bgColor, mainFonts, primaryColor)
 import Time exposing (Month(..), millisToPosix, utc)
 
 
@@ -24,8 +26,7 @@ type alias Model =
     , timeZone : Time.Zone
     , time : Time.Posix
     , settingsModal : Bool
-    , currentTheme : ThemeSetting
-    , currentLang : LangSetting
+    , settings : Settings
     }
 
 
@@ -35,8 +36,10 @@ init =
       , timeZone = utc
       , time = millisToPosix 0
       , settingsModal = False
-      , currentTheme = Settings.Dark
-      , currentLang = Settings.EN
+      , settings =
+            { language = Settings.Languages.EN
+            , theme = Settings.Themes.Dark
+            }
       }
     , Task.perform AdjustTimeZone Time.here
     )
@@ -53,8 +56,12 @@ type Msg
     | AdjustTimeZone Time.Zone
     | OpenSettings
     | CloseSettings
-    | SetTheme Settings.ThemeSetting
-    | SetLanguage Settings.LangSetting
+    | ChangeSettings Settings
+
+
+
+--| UpdateTheme
+--| UpdateLanguage
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -78,11 +85,14 @@ update msg model =
         CloseSettings ->
             ( { model | settingsModal = False }, Cmd.none )
 
-        SetTheme theme ->
-            ( { model | currentTheme = theme }, Cmd.none )
+        ChangeSettings newSettings ->
+            ( { model | settings = newSettings }, Cmd.none )
 
-        SetLanguage lang ->
-            ( { model | currentLang = lang }, Cmd.none )
+
+
+--UpdateTheme ->
+--
+--UpdateLanguage  ->
 
 
 renderSocialNetworks : Html Msg
@@ -106,6 +116,54 @@ renderSocialNetworks =
         ]
 
 
+themeSelector : Model -> ThemeSetting -> Msg
+themeSelector model theme =
+    case theme of
+        Settings.Themes.Light ->
+            let
+                currentSettings =
+                    model.settings
+
+                newSettings =
+                    { currentSettings | theme = Settings.Themes.Light }
+            in
+            ChangeSettings newSettings
+
+        Settings.Themes.Dark ->
+            let
+                currentSettings =
+                    model.settings
+
+                newSettings =
+                    { currentSettings | theme = Settings.Themes.Dark }
+            in
+            ChangeSettings newSettings
+
+
+languageSelector : Model -> LangSetting -> Msg
+languageSelector model theme =
+    case theme of
+        Settings.Languages.EN ->
+            let
+                currentSettings =
+                    model.settings
+
+                newSettings =
+                    { currentSettings | language = Settings.Languages.EN }
+            in
+            ChangeSettings newSettings
+
+        Settings.Languages.ES ->
+            let
+                currentSettings =
+                    model.settings
+
+                newSettings =
+                    { currentSettings | language = Settings.Languages.ES }
+            in
+            ChangeSettings newSettings
+
+
 
 ---- VIEW ----
 
@@ -119,12 +177,11 @@ view model =
             ]
         ]
         [ if model.settingsModal then
-            renderModal
+            renderSettingsModal
                 { close = CloseSettings
-                , options =
-                    [ ( Settings.Theme Settings.Dark, SetTheme Settings.Dark )
-                    , ( Settings.Language Settings.EN, SetLanguage Settings.EN )
-                    ]
+                , current = model.settings
+                , themeSelector = themeSelector model
+                , languageSelector = languageSelector model
                 }
 
           else
@@ -151,6 +208,7 @@ view model =
                 [ ( Page.AboutMe, ChangePage Page.AboutMe )
                 , ( Page.MyInterests, ChangePage Page.MyInterests )
                 , ( Page.MyWork, ChangePage Page.MyWork )
+                , ( Page.Minsky, ChangePage Page.Minsky )
                 ]
             ]
         ]

@@ -1,0 +1,115 @@
+module Settings.Settings exposing (Settings, renderSettingsModal)
+
+import Css exposing (..)
+import Css.Transitions exposing (transition)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css)
+import Html.Styled.Events exposing (onClick)
+import Settings.Languages exposing (LangSetting, renderLanguageSettings)
+import Settings.Themes exposing (ThemeSetting, renderThemeSettings)
+import Theme exposing (bgColor, mainFonts, primaryColor)
+
+
+type alias Settings =
+    { language : LangSetting
+    , theme : ThemeSetting
+    }
+
+
+renderSettingsModal : { close : msg, current : Settings, themeSelector : ThemeSetting -> msg, languageSelector : LangSetting -> msg } -> Html msg
+renderSettingsModal { close, current, themeSelector, languageSelector } =
+    div
+        [ css
+            [ position absolute
+            , width (vw 100)
+            , height (vh 100)
+            , zIndex (int 2)
+            ]
+        ]
+        [ div
+            [ css
+                [ position absolute
+                , backgroundColor (hex bgColor)
+                , opacity (num 0.85)
+                , width (pct 100)
+                , height (pct 100)
+                ]
+            ]
+            []
+        , div
+            [ css
+                [ position absolute
+                , zIndex (int 3)
+                , width (pct 100)
+                , height (pct 100)
+                , displayFlex
+                , justifyContent center
+                ]
+            ]
+            [ div
+                [ css
+                    [ displayFlex
+                    , flexFlow1 column
+                    , justifyContent center
+                    , color (hex primaryColor)
+                    , fontFamilies mainFonts
+                    ]
+                ]
+                [ div
+                    [ css
+                        [ backgroundColor (hex bgColor)
+                        , padding (rem 1)
+                        ]
+                    ]
+                    [ div
+                        [ css
+                            [ border3 (px 1) solid (hex primaryColor)
+                            , padding (rem 1)
+                            ]
+                        ]
+                        [ div
+                            [ css
+                                [ displayFlex
+                                , flexFlow1 column
+                                , minWidth (rem 8)
+                                , alignItems center
+                                ]
+                            ]
+                            [ div
+                                [ css
+                                    [ backgroundColor (hex bgColor)
+                                    , padding2 zero (rem 1)
+                                    , transforms [ translateY (rem -1.5) ]
+                                    ]
+                                ]
+                                [ text "Settings"
+                                ]
+                            , div
+                                [ css
+                                    []
+                                ]
+                                [ div []
+                                    [ renderThemeSettings current.theme themeSelector
+                                    , renderLanguageSettings current.language languageSelector
+                                    ]
+                                , div
+                                    [ css
+                                        [ fontSize (rem 1)
+                                        , textDecoration underline
+                                        , marginTop (rem 2)
+                                        , textAlign right
+                                        , hover
+                                            [ cursor pointer
+                                            ]
+                                        ]
+                                    , onClick close
+                                    ]
+                                    [ text "Close"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
