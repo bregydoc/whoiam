@@ -3,7 +3,7 @@ module Content.Minsky exposing (minskyBody)
 import Css exposing (bold, center, color, displayFlex, fontWeight, hex, lineHeight, margin2, marginLeft, marginTop, rem)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, target)
-import Minsky exposing (viewMinskyLogoWithScale)
+import Icons.Minsky exposing (renderMinskyLogoWithScale)
 import Theme exposing (primaryColor)
 
 
@@ -18,7 +18,7 @@ minskyBody =
                 [ marginLeft (rem 1)
                 ]
             ]
-            [ viewMinskyLogoWithScale 0.6 primaryColor
+            [ renderMinskyLogoWithScale 0.6 primaryColor
             ]
         , div
             [ css

@@ -1,12 +1,12 @@
-module Battery exposing (viewBattery)
+module Icons.Battery exposing (renderBatteryIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeMiterlimit, strokeWidth, viewBox, width)
 
 
-viewBattery : String -> Html msg
-viewBattery color =
+renderBatteryIcon : String -> Html msg
+renderBatteryIcon color =
     svg
         [ width "25"
         , height "13"

@@ -3,7 +3,7 @@ module Page exposing (Page(..), renderPages)
 import Content.About exposing (aboutBody)
 import Content.Minsky exposing (minskyBody)
 import Content.MyInterests exposing (myInterestsBody)
-import Content.MyWork exposing (myWorkBody)
+import Content.MyWork exposing (WorkType, myWorkBody)
 import Css exposing (..)
 import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
@@ -15,7 +15,7 @@ import Theme exposing (bgColor, mainFonts, primaryColor)
 type Page
     = AboutMe
     | MyInterests
-    | MyWork
+    | MyWork WorkType
     | Minsky
 
 
@@ -30,7 +30,7 @@ renderOptionButton currentPage ( page, msg ) =
                 MyInterests ->
                     "My Interests"
 
-                MyWork ->
+                MyWork _ ->
                     "My work"
 
                 Minsky ->
@@ -82,8 +82,26 @@ renderOptionButton currentPage ( page, msg ) =
         ]
 
 
-renderPages : Page -> List ( Page, msg ) -> Html msg
-renderPages currentPage pages =
+pages : List Page
+pages =
+    [ AboutMe
+    , MyInterests
+    , MyWork Content.MyWork.MainMenu
+    , Minsky
+    ]
+
+
+updateMyWork : (Page -> msg) -> (WorkType -> msg)
+updateMyWork updater =
+    \w -> updater <| MyWork w
+
+
+
+--updatePage
+
+
+renderPages : Page -> (Page -> msg) -> Html msg
+renderPages currentPage updatePage =
     div
         [ css
             [ border3 (px 1.0) solid (hex primaryColor)
@@ -99,7 +117,7 @@ renderPages currentPage pages =
                 , margin2 zero zero
                 ]
             ]
-            (pages
+            (List.map (\page -> ( page, updatePage page )) pages
                 |> List.map (renderOptionButton currentPage)
             )
         , div
@@ -116,8 +134,8 @@ renderPages currentPage pages =
                     MyInterests ->
                         myInterestsBody
 
-                    MyWork ->
-                        myWorkBody
+                    MyWork currentWork ->
+                        myWorkBody currentWork <| updateMyWork updatePage
 
                     Minsky ->
                         minskyBody

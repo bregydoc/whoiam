@@ -164,6 +164,22 @@ languageSelector model theme =
             ChangeSettings newSettings
 
 
+pageUpdater : Page -> Msg
+pageUpdater page =
+    case page of
+        Page.AboutMe ->
+            ChangePage Page.AboutMe
+
+        Page.MyInterests ->
+            ChangePage Page.MyInterests
+
+        Page.MyWork workType ->
+            ChangePage <| Page.MyWork workType
+
+        Page.Minsky ->
+            ChangePage Page.Minsky
+
+
 
 ---- VIEW ----
 
@@ -204,12 +220,7 @@ view model =
                 , div []
                     [ renderSocialNetworks ]
                 ]
-            , renderPages model.currentPage
-                [ ( Page.AboutMe, ChangePage Page.AboutMe )
-                , ( Page.MyInterests, ChangePage Page.MyInterests )
-                , ( Page.MyWork, ChangePage Page.MyWork )
-                , ( Page.Minsky, ChangePage Page.Minsky )
-                ]
+            , renderPages model.currentPage pageUpdater
             ]
         ]
 

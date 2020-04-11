@@ -1,10 +1,10 @@
 module StatusBar exposing (renderStatusBar)
 
-import Battery exposing (viewBattery)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import Icons.Battery exposing (renderBatteryIcon)
 import LifeSpan exposing (lifePercent)
 import Round
 import StatusTime exposing (timeToDate, timeToStr)
@@ -34,7 +34,7 @@ renderStatusBar zone time openSettings =
                     , paddingTop (rem 0.1)
                     ]
                 ]
-                [ viewBattery primaryColor ]
+                [ renderBatteryIcon primaryColor ]
             , text " | "
             , text <| timeToDate zone time -- "Tue Apr 7"
             , text " | "

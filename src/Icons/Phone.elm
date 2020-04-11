@@ -1,12 +1,12 @@
-module Phone exposing (viewPhone)
+module Icons.Phone exposing (renderPhoneIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeLinejoin, strokeOpacity, strokeWidth, viewBox, width)
 
 
-viewPhone : String -> Html msg
-viewPhone color =
+renderPhoneIcon : String -> Html msg
+renderPhoneIcon color =
     svg
         [ width "22"
         , height "23"

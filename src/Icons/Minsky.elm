@@ -1,17 +1,17 @@
-module Minsky exposing (viewMinskyLogo, viewMinskyLogoWithScale, viewMinskyLogoWithSize)
+module Icons.Minsky exposing (renderMinskyLogo, renderMinskyLogoWithScale, renderMinskyLogoWithSize)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (clipRule, d, fill, fillRule, height, viewBox, width)
 
 
-viewMinskyLogoWithScale : Float -> String -> Html msg
-viewMinskyLogoWithScale scale color =
-    viewMinskyLogoWithSize ( round <| 254 * scale, round <| 59 * scale ) color
+renderMinskyLogoWithScale : Float -> String -> Html msg
+renderMinskyLogoWithScale scale color =
+    renderMinskyLogoWithSize ( round <| 254 * scale, round <| 59 * scale ) color
 
 
-viewMinskyLogoWithSize : ( Int, Int ) -> String -> Html sg
-viewMinskyLogoWithSize ( w, h ) color =
+renderMinskyLogoWithSize : ( Int, Int ) -> String -> Html sg
+renderMinskyLogoWithSize ( w, h ) color =
     svg
         [ width <| String.fromInt w
         , height <| String.fromInt h
@@ -59,6 +59,6 @@ viewMinskyLogoWithSize ( w, h ) color =
         ]
 
 
-viewMinskyLogo : String -> Html msg
-viewMinskyLogo color =
-    viewMinskyLogoWithSize ( 254, 59 ) color
+renderMinskyLogo : String -> Html msg
+renderMinskyLogo color =
+    renderMinskyLogoWithSize ( 254, 59 ) color

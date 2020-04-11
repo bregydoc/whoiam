@@ -2,13 +2,13 @@ module Link exposing (Link(..), viewSocialLink)
 
 import Css exposing (..)
 import Css.Transitions exposing (transition)
-import Github exposing (viewGithub)
 import Html.Styled exposing (Html, div, p, text)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import LinkedIn exposing (viewLinkedIn)
-import Mail exposing (viewMail)
-import Phone exposing (viewPhone)
+import Icons.Github exposing (renderGithubIcon)
+import Icons.LinkedIn exposing (renderLinkedInIcon)
+import Icons.Mail exposing (renderMailIcon)
+import Icons.Phone exposing (renderPhoneIcon)
 import Theme exposing (mainFonts, primaryColor)
 
 
@@ -58,13 +58,13 @@ viewSocialLink : Link -> msg -> Html msg
 viewSocialLink link open =
     case link of
         Email value ->
-            viewSocialLayout open value <| viewMail primaryColor
+            viewSocialLayout open value <| renderMailIcon primaryColor
 
         Github value ->
-            viewSocialLayout open value <| viewGithub primaryColor
+            viewSocialLayout open value <| renderGithubIcon primaryColor
 
         LinkedIn value ->
-            viewSocialLayout open value <| viewLinkedIn primaryColor
+            viewSocialLayout open value <| renderLinkedInIcon primaryColor
 
         Phone value ->
-            viewSocialLayout open value <| viewPhone primaryColor
+            viewSocialLayout open value <| renderPhoneIcon primaryColor

@@ -1,12 +1,12 @@
-module Mail exposing (viewMail)
+module Icons.Mail exposing (renderMailIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeLinejoin, strokeOpacity, strokeWidth, viewBox, width)
 
 
-viewMail : String -> Html msg
-viewMail color =
+renderMailIcon : String -> Html msg
+renderMailIcon color =
     svg
         [ width "22"
         , height "18"

@@ -1,12 +1,12 @@
-module LinkedIn exposing (viewLinkedIn)
+module Icons.LinkedIn exposing (renderLinkedInIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeLinejoin, strokeOpacity, strokeWidth, viewBox, width)
 
 
-viewLinkedIn : String -> Html msg
-viewLinkedIn color =
+renderLinkedInIcon : String -> Html msg
+renderLinkedInIcon color =
     svg
         [ width "22"
         , height "21"

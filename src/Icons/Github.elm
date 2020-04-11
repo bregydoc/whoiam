@@ -1,12 +1,12 @@
-module Github exposing (viewGithub)
+module Icons.Github exposing (renderGithubIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeLinejoin, strokeOpacity, strokeWidth, viewBox, width)
 
 
-viewGithub : String -> Html msg
-viewGithub color =
+renderGithubIcon : String -> Html msg
+renderGithubIcon color =
     svg
         [ width "22"
         , height "23"

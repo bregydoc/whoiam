@@ -11,7 +11,7 @@ birthDay zone =
 
 lifeSpan : Int
 lifeSpan =
-    86
+    74
 
 
 
