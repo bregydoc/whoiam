@@ -1,5 +1,7 @@
 module Content.MyWork exposing (WorkType(..), renderMyWorkPage)
 
+import Content.Content exposing (projects)
+import Content.ProjectCard exposing (renderProjectCard)
 import Css exposing (..)
 import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
@@ -104,7 +106,6 @@ renderWorkType title selected icon =
                     [ displayFlex
                     , width (pct 100)
                     , marginTop (rem 1)
-                    , fontSize (rem 1.0)
                     , justifyContent center
                     , padding2 (rem 1) zero
                     , borderTop3 (px 1) solid (hex primaryColor)
@@ -144,6 +145,19 @@ renderMainMenu updater =
         ]
 
 
+renderPersonalProjects : Html msg
+renderPersonalProjects =
+    div
+        [ css
+            [ displayFlex
+            , overflowX scroll
+
+            --, flexWrap wrap
+            ]
+        ]
+        (List.map renderProjectCard projects)
+
+
 renderMyWorkPage : WorkType -> (WorkType -> msg) -> Html msg
 renderMyWorkPage w updater =
     let
@@ -153,7 +167,7 @@ renderMyWorkPage w updater =
                     renderMainMenu updater
 
                 PersonalProjects ->
-                    renderSubPageLayout "Personal Projects" (updater MainMenu) <| text "hello world"
+                    renderSubPageLayout "Personal Projects" (updater MainMenu) <| renderPersonalProjects
 
                 Research ->
                     renderSubPageLayout "Research" (updater MainMenu) <| text "hello world"
