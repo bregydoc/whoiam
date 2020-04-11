@@ -1,10 +1,11 @@
-module Content.MyWork exposing (WorkType(..), myWorkBody)
+module Content.MyWork exposing (WorkType(..), renderMyWorkPage)
 
 import Css exposing (..)
 import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import Icons.BackArrow exposing (renderBackArrow)
 import Icons.Icosahedron exposing (Icosahedron, renderIcosahedronIcon)
 import Theme exposing (bgColor, primaryColor)
 
@@ -16,18 +17,51 @@ type WorkType
     | IndustrialExperience
 
 
-renderSubPageLayout : String -> Html msg -> Html msg
-renderSubPageLayout title content =
+renderSubPageLayout : String -> msg -> Html msg -> Html msg
+renderSubPageLayout title back content =
     div
         [ css
             [ displayFlex
             , flexFlow1 column
             , width (pct 100)
+            , margin4 (rem 2) (rem 2) (rem 2) (rem 2)
             ]
         ]
-        [ div []
-            [ text title ]
-        , div []
+        [ div
+            [ css
+                [ displayFlex
+                , alignItems center
+                , hover
+                    [ cursor pointer
+                    ]
+                ]
+            , onClick back
+            ]
+            [ div
+                [ css
+                    [ marginRight (rem 1)
+                    , paddingTop (rem 0.2)
+                    ]
+                ]
+                [ renderBackArrow primaryColor ]
+            , div
+                [ css
+                    [ fontWeight bold
+                    , backgroundColor (hex primaryColor)
+                    , color (hex bgColor)
+                    , padding2 (rem 0.4) (rem 0.6)
+                    ]
+                ]
+                [ text title
+                ]
+            ]
+        , div
+            [ css
+                [ marginTop (rem 2)
+                , marginLeft (rem 2)
+                , marginRight (rem 2)
+                ]
+            ]
             [ content ]
         ]
 
@@ -37,13 +71,13 @@ renderWorkType title selected icon =
     div
         [ css
             [ border3 (px 2) solid transparent
-            , transition
-                [--Css.Transitions.border 333
-                ]
+            , margin (rem 2)
+
+            --, transition
+            --    [--Css.Transitions.border 333
+            --    ]
             , hover
                 [ cursor pointer
-
-                --, border3 (px 2) solid (hex primaryColor)
                 ]
             ]
         , onClick selected
@@ -81,7 +115,9 @@ renderWorkType title selected icon =
                         [ textAlign center
                         ]
                     ]
-                    [ div [] [ text title ]
+                    [ div
+                        []
+                        [ text title ]
                     ]
                 ]
             ]
@@ -94,8 +130,9 @@ renderMainMenu updater =
         [ css
             [ displayFlex
             , width (pct 100)
-            , justifyContent spaceBetween
+            , justifyContent spaceAround
             , flexWrap wrap
+            , marginBottom (rem 2)
             ]
         ]
         [ renderIcosahedronIcon Icons.Icosahedron.Type1 primaryColor
@@ -107,25 +144,26 @@ renderMainMenu updater =
         ]
 
 
-renderSubPage : WorkType -> (WorkType -> msg) -> Html msg
-renderSubPage w updater =
-    case w of
-        MainMenu ->
-            renderMainMenu updater
+renderMyWorkPage : WorkType -> (WorkType -> msg) -> Html msg
+renderMyWorkPage w updater =
+    let
+        render =
+            case w of
+                MainMenu ->
+                    renderMainMenu updater
 
-        PersonalProjects ->
-            renderSubPageLayout "Personal Projects" <| text "hello world"
+                PersonalProjects ->
+                    renderSubPageLayout "Personal Projects" (updater MainMenu) <| text "hello world"
 
-        Research ->
-            renderSubPageLayout "Research" <| text "hello world"
+                Research ->
+                    renderSubPageLayout "Research" (updater MainMenu) <| text "hello world"
 
-        IndustrialExperience ->
-            renderSubPageLayout "Industrial Experience" <| text "hello world"
-
-
-myWorkBody : WorkType -> (WorkType -> msg) -> Html msg
-myWorkBody currentState updater =
+                IndustrialExperience ->
+                    renderSubPageLayout "Industrial Experience" (updater MainMenu) <| text "hello world"
+    in
     div
-        [ css [ displayFlex ]
+        [ css
+            [ displayFlex
+            ]
         ]
-        [ renderSubPage currentState updater ]
+        [ render ]

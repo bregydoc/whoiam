@@ -10,7 +10,10 @@ import Theme exposing (primaryColor)
 aboutBody : Html msg
 aboutBody =
     div
-        [ css [ displayFlex ]
+        [ css
+            [ displayFlex
+            , margin (rem 2)
+            ]
         ]
         [ div
             [ css

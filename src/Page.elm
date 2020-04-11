@@ -3,7 +3,7 @@ module Page exposing (Page(..), renderPages)
 import Content.About exposing (aboutBody)
 import Content.Minsky exposing (minskyBody)
 import Content.MyInterests exposing (myInterestsBody)
-import Content.MyWork exposing (WorkType, myWorkBody)
+import Content.MyWork exposing (WorkType, renderMyWorkPage)
 import Css exposing (..)
 import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
@@ -85,19 +85,10 @@ renderOptionButton currentPage ( page, msg ) =
 pages : List Page
 pages =
     [ AboutMe
-    , MyInterests
     , MyWork Content.MyWork.MainMenu
+    , MyInterests
     , Minsky
     ]
-
-
-updateMyWork : (Page -> msg) -> (WorkType -> msg)
-updateMyWork updater =
-    \w -> updater <| MyWork w
-
-
-
---updatePage
 
 
 renderPages : Page -> (Page -> msg) -> Html msg
@@ -114,7 +105,9 @@ renderPages currentPage updatePage =
             [ css
                 [ displayFlex
                 , fontFamilies mainFonts
-                , margin2 zero zero
+
+                --, margin2 zero zero
+                --, marginBottom (rem -1)
                 ]
             ]
             (List.map (\page -> ( page, updatePage page )) pages
@@ -122,8 +115,7 @@ renderPages currentPage updatePage =
             )
         , div
             [ css
-                [ padding (rem 2)
-                , fontFamilies mainFonts
+                [ fontFamilies mainFonts
                 ]
             ]
             [ div []
@@ -135,7 +127,7 @@ renderPages currentPage updatePage =
                         myInterestsBody
 
                     MyWork currentWork ->
-                        myWorkBody currentWork <| updateMyWork updatePage
+                        renderMyWorkPage currentWork <| \w -> updatePage (MyWork w)
 
                     Minsky ->
                         minskyBody

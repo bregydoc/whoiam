@@ -1,6 +1,12 @@
-module Theme exposing (bgColor, mainFonts, primaryColor, secondaryColor)
+module Theme exposing (Device(..), Theme, bgColor, mainFonts, primaryColor, secondaryColor)
 
 -- Theme information
+
+
+type Device
+    = Mobile
+    | Tablet
+    | Desktop
 
 
 type alias Theme =
@@ -8,6 +14,7 @@ type alias Theme =
     , primaryColor : String
     , secondaryColor : String
     , bgColor : String
+    , device : Device
     }
 
 
@@ -17,6 +24,7 @@ lightTheme =
     , primaryColor = "#50f2d5"
     , secondaryColor = "#ffffff"
     , bgColor = "#000000"
+    , device = Desktop
     }
 
 
@@ -26,6 +34,7 @@ darkTheme =
     , primaryColor = "#000000"
     , secondaryColor = "#50f2d5"
     , bgColor = "#ffffff"
+    , device = Desktop
     }
 
 
@@ -47,3 +56,7 @@ secondaryColor =
 bgColor : String
 bgColor =
     "#000000"
+
+
+
+-- #291d39

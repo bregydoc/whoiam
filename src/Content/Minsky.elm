@@ -11,11 +11,11 @@ minskyBody : Html msg
 minskyBody =
     div
         [ css
-            []
+            [ marginTop (rem 2) ]
         ]
         [ div
             [ css
-                [ marginLeft (rem 1)
+                [ marginLeft (rem 2)
                 ]
             ]
             [ renderMinskyLogoWithScale 0.6 primaryColor
@@ -27,7 +27,7 @@ minskyBody =
                 , margin2 (rem 1) (rem 2)
                 ]
             ]
-            [ text "Minsky is a peruvian initiative to democratize and boost our country (Peru) with technology."
+            [ text "Minsky is a peruvian initiative to boost our country (Peru) with technology."
             , text " The main goal of Minsky is generate digital products for the community based on open source and modern technologies stack."
             , div
                 [ css
