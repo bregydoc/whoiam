@@ -5,14 +5,14 @@ import Browser.Dom exposing (getViewport)
 import Browser.Events exposing (onResize)
 import Browser.Navigation as Navigator
 import Css exposing (..)
-import Head exposing (headNameAndTag, viewHead)
+import Head exposing (headNameAndTag, renderHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Link exposing (Link, renderSocialLink)
 import Page exposing (Page, renderPages)
 import Settings.Languages exposing (LangSetting)
 import Settings.Settings exposing (Settings, renderSettingsModal)
 import Settings.Themes exposing (ThemeSetting)
+import SocialNetworks exposing (renderHorizontalSocialNetworks, renderSocialNetworks)
 import StatusBar exposing (renderStatusBar)
 import Task
 import Theme exposing (Theme, darkTheme, getScreenSize)
@@ -149,27 +149,6 @@ update msg model =
 --UpdateLanguage  ->
 
 
-renderSocialNetworks : Theme -> Html Msg
-renderSocialNetworks theme =
-    div
-        [ css
-            [ displayFlex
-            , flexFlow1 column
-            , alignItems flexEnd
-            , marginTop (rem 3)
-            ]
-        ]
-        [ OpenLink "mailto:bregy.malpartida@utec.edu.pe"
-            |> renderSocialLink theme (Link.Email "bregy.malpartida@utec.edu.pe")
-        , OpenLink "https://github.com/bregydoc"
-            |> renderSocialLink theme (Link.Github "github.com/bregydoc")
-        , OpenLink "https://linkedin.com/in/bregy"
-            |> renderSocialLink theme (Link.LinkedIn "linkedin/bregy")
-        , OpenLink "phone:+51957821858"
-            |> renderSocialLink theme (Link.Phone "+51957821858")
-        ]
-
-
 themeSelector : Model -> ThemeSetting -> Msg
 themeSelector model theme =
     case theme of
@@ -240,6 +219,35 @@ pageUpdater page =
 
 view : Model -> Html Msg
 view model =
+    let
+        paddingY =
+            case model.theme.device of
+                Theme.BigDesktop ->
+                    rem 2
+
+                Theme.Desktop ->
+                    rem 2
+
+                Theme.Tablet ->
+                    rem 2
+
+                _ ->
+                    rem 1.6
+
+        paddingX =
+            case model.theme.device of
+                Theme.BigDesktop ->
+                    rem 4
+
+                Theme.Desktop ->
+                    rem 4
+
+                Theme.Tablet ->
+                    rem 3
+
+                _ ->
+                    rem 1
+    in
     div
         [ css
             [ minHeight (vh 100)
@@ -259,7 +267,7 @@ view model =
             div [] []
         , div
             [ css
-                [ padding2 (rem 2) (rem 4)
+                [ padding2 paddingY paddingX
                 , margin zero
                 , color (hex model.theme.primaryColor)
                 ]
@@ -268,12 +276,21 @@ view model =
             , div
                 [ css
                     [ displayFlex
-                    , justifyContent spaceBetween
+                    , if model.theme.device == Theme.Phone then
+                        justifyContent center
+
+                      else
+                        justifyContent spaceBetween
                     ]
                 ]
-                [ viewHead model.theme <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
-                , div []
-                    [ renderSocialNetworks model.theme ]
+                [ renderHead model.theme <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+                , if model.theme.device == Theme.Desktop then
+                    div
+                        []
+                        [ renderSocialNetworks model.theme ]
+
+                  else
+                    div [] []
                 ]
             , renderPages model.theme model.currentPage pageUpdater
             ]

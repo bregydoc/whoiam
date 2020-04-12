@@ -7,7 +7,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Icons.BackArrow exposing (renderBackArrow)
+import Icons.BackArrow exposing (renderBackArrowIcon)
 import Icons.Icosahedron exposing (Icosahedron, renderIcosahedronIcon)
 import Theme exposing (Theme)
 
@@ -49,7 +49,7 @@ renderSubPageLayout theme title back content =
                         , paddingTop (rem 0.2)
                         ]
                     ]
-                    [ renderBackArrow theme.primaryColor ]
+                    [ renderBackArrowIcon theme.primaryColor ]
                 , div
                     [ css
                         [ fontWeight bold

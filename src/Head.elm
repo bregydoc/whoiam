@@ -1,8 +1,9 @@
-module Head exposing (Head, headNameAndTag, viewHead)
+module Head exposing (Head, headNameAndTag, renderHead)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import SocialNetworks exposing (renderHorizontalSocialNetworks)
 import Theme exposing (Theme)
 
 
@@ -15,19 +16,35 @@ headNameAndTag name tag =
     Head name tag
 
 
-viewHead : Theme -> Head -> Html msg
-viewHead theme head =
+renderHead : Theme -> Head -> Html msg
+renderHead theme head =
     case head of
         Head name tag ->
+            let
+                bigFont =
+                    case theme.device of
+                        Theme.Phone ->
+                            rem 2
+
+                        _ ->
+                            rem 3
+
+                smallFont =
+                    rem 1.2
+            in
             div
                 [ css
                     [ fontFamilies theme.mainFonts
-                    , marginBottom (rem 3)
+                    , if theme.device /= Theme.Desktop then
+                        marginBottom (rem 2)
+
+                      else
+                        marginBottom (rem 3)
                     ]
                 ]
                 [ h2
                     [ css
-                        [ fontSize (rem 3)
+                        [ fontSize bigFont
                         , margin4 (rem 3) zero zero zero
                         , fontWeight normal
                         , opacity (num 0.52)
@@ -42,7 +59,7 @@ viewHead theme head =
                     ]
                     [ div
                         [ css
-                            [ fontSize (rem 3)
+                            [ fontSize bigFont
                             , fontWeight normal
                             , opacity (num 0.52)
                             ]
@@ -53,7 +70,7 @@ viewHead theme head =
                             [ marginTop zero
                             , marginBottom zero
                             , marginLeft (rem 2)
-                            , fontSize (rem 3)
+                            , fontSize bigFont
                             , fontWeight normal
                             , opacity (num 0.52)
                             , fontWeight bold
@@ -64,13 +81,35 @@ viewHead theme head =
                     ]
                 , div
                     [ css
-                        [ fontSize (rem 1)
+                        [ fontSize smallFont
                         , color (hex theme.secondaryColor)
                         , opacity (num 0.64)
                         ]
                     ]
-                    [ h3 [ css [ fontWeight normal ] ]
+                    [ h3
+                        [ css
+                            [ fontSize smallFont
+                            , fontWeight normal
+                            , lineHeight (rem 1.6)
+                            ]
+                        ]
                         [ text tag
                         ]
                     ]
+                , if theme.device /= Theme.Desktop then
+                    div
+                        [ css
+                            [ marginTop (rem 2)
+                            , displayFlex
+                            , if theme.device == Theme.Phone then
+                                justifyContent center
+
+                              else
+                                justifyContent flexStart
+                            ]
+                        ]
+                        [ renderHorizontalSocialNetworks theme ]
+
+                  else
+                    div [] []
                 ]

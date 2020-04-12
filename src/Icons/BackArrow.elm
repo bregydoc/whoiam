@@ -1,12 +1,12 @@
-module Icons.BackArrow exposing (renderBackArrow)
+module Icons.BackArrow exposing (renderBackArrowIcon)
 
 import Html.Styled exposing (Html)
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (d, fill, height, stroke, strokeLinecap, strokeLinejoin, strokeWidth, viewBox, width)
 
 
-renderBackArrow : String -> Html msg
-renderBackArrow color =
+renderBackArrowIcon : String -> Html msg
+renderBackArrowIcon color =
     svg
         [ width "16"
         , height "16"

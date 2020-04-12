@@ -93,6 +93,18 @@ pages =
 
 renderPages : Theme -> Page -> (Page -> msg) -> Html msg
 renderPages theme currentPage updatePage =
+    let
+        optionsBar =
+            if theme.device == Theme.Phone then
+                [ div []
+                    [ renderOptionButton theme currentPage <| ( currentPage, updatePage currentPage )
+                    ]
+                ]
+
+            else
+                List.map (\page -> ( page, updatePage page )) pages
+                    |> List.map (renderOptionButton theme currentPage)
+    in
     div
         [ css
             [ border3 (px 1.0) solid (hex theme.primaryColor)
@@ -110,9 +122,7 @@ renderPages theme currentPage updatePage =
                 --, marginBottom (rem -1)
                 ]
             ]
-            (List.map (\page -> ( page, updatePage page )) pages
-                |> List.map (renderOptionButton theme currentPage)
-            )
+            optionsBar
         , div
             [ css
                 [ fontFamilies theme.mainFonts

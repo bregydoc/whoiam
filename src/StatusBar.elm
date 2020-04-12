@@ -26,8 +26,13 @@ renderStatusBar theme zone time openSettings =
 
                 else
                     num 1
+            , if theme.device == Theme.Phone then
+                justifyContent center
+
+              else
+                justifyContent flexStart
             , transition
-                [ Css.Transitions.opacity 333
+                [ Css.Transitions.opacity 100
                 ]
             ]
         ]
@@ -45,16 +50,24 @@ renderStatusBar theme zone time openSettings =
         , text <| timeToDate zone time -- "Tue Apr 7"
         , text " | "
         , text <| timeToStr zone time
-        , text " | "
-        , div
-            [ css
-                [ marginLeft (rem 0.5)
-                , textDecoration underline
-                , hover
-                    [ cursor pointer
+        , if theme.device /= Theme.Phone then
+            text " | "
+
+          else
+            div [] []
+        , if theme.device /= Theme.Phone then
+            div
+                [ css
+                    [ marginLeft (rem 0.5)
+                    , textDecoration underline
+                    , hover
+                        [ cursor pointer
+                        ]
                     ]
+                , onClick openSettings
                 ]
-            , onClick openSettings
-            ]
-            [ text "settings" ]
+                [ text "settings" ]
+
+          else
+            div [] []
         ]

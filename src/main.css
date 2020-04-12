@@ -9,6 +9,13 @@
     height: inherit;
 }
 
+@media screen and (max-width: 1200px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+
 body {
     margin: 0;
     padding: 0;
