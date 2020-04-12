@@ -9,7 +9,7 @@ import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Icons.BackArrow exposing (renderBackArrow)
 import Icons.Icosahedron exposing (Icosahedron, renderIcosahedronIcon)
-import Theme exposing (bgColor, primaryColor)
+import Theme exposing (Theme)
 
 
 type WorkType
@@ -19,57 +19,62 @@ type WorkType
     | IndustrialExperience
 
 
-renderSubPageLayout : String -> msg -> Html msg -> Html msg
-renderSubPageLayout title back content =
+renderSubPageLayout : Theme -> String -> msg -> Html msg -> Html msg
+renderSubPageLayout theme title back content =
     div
         [ css
-            [ displayFlex
-            , flexFlow1 column
-            , width (pct 100)
-            , margin4 (rem 2) (rem 2) (rem 2) (rem 2)
+            [ width (pct 100)
             ]
         ]
         [ div
             [ css
                 [ displayFlex
-                , alignItems center
-                , hover
-                    [ cursor pointer
-                    ]
+                , flexFlow1 column
+                , margin4 (rem 2) (rem 2) (rem 2) (rem 2)
                 ]
-            , onClick back
             ]
             [ div
                 [ css
-                    [ marginRight (rem 1)
-                    , paddingTop (rem 0.2)
+                    [ displayFlex
+                    , alignItems center
+                    , hover
+                        [ cursor pointer
+                        ]
+                    ]
+                , onClick back
+                ]
+                [ div
+                    [ css
+                        [ marginRight (rem 1)
+                        , paddingTop (rem 0.2)
+                        ]
+                    ]
+                    [ renderBackArrow theme.primaryColor ]
+                , div
+                    [ css
+                        [ fontWeight bold
+                        , backgroundColor (hex theme.primaryColor)
+                        , color (hex theme.bgColor)
+                        , padding2 (rem 0.4) (rem 0.6)
+                        ]
+                    ]
+                    [ text title
                     ]
                 ]
-                [ renderBackArrow primaryColor ]
             , div
                 [ css
-                    [ fontWeight bold
-                    , backgroundColor (hex primaryColor)
-                    , color (hex bgColor)
-                    , padding2 (rem 0.4) (rem 0.6)
+                    [ marginTop (rem 2)
+                    , marginLeft (rem 2)
+                    , marginRight (rem 2)
                     ]
                 ]
-                [ text title
-                ]
+                [ content ]
             ]
-        , div
-            [ css
-                [ marginTop (rem 2)
-                , marginLeft (rem 2)
-                , marginRight (rem 2)
-                ]
-            ]
-            [ content ]
         ]
 
 
-renderWorkType : String -> msg -> Html msg -> Html msg
-renderWorkType title selected icon =
+renderWorkType : Theme -> String -> msg -> Html msg -> Html msg
+renderWorkType theme title selected icon =
     div
         [ css
             [ border3 (px 2) solid transparent
@@ -88,7 +93,7 @@ renderWorkType title selected icon =
             [ css
                 [ displayFlex
                 , padding4 (rem 1.5) zero zero zero
-                , border3 (px 1) solid (hex primaryColor)
+                , border3 (px 1) solid (hex theme.primaryColor)
                 , flexFlow1 column
                 , alignItems center
                 , minWidth (rem 16)
@@ -108,7 +113,7 @@ renderWorkType title selected icon =
                     , marginTop (rem 1)
                     , justifyContent center
                     , padding2 (rem 1) zero
-                    , borderTop3 (px 1) solid (hex primaryColor)
+                    , borderTop3 (px 1) solid (hex theme.primaryColor)
                     ]
                 ]
                 [ div
@@ -125,8 +130,8 @@ renderWorkType title selected icon =
         ]
 
 
-renderMainMenu : (WorkType -> msg) -> Html msg
-renderMainMenu updater =
+renderMainMenu : Theme -> (WorkType -> msg) -> Html msg
+renderMainMenu theme updater =
     div
         [ css
             [ displayFlex
@@ -136,44 +141,45 @@ renderMainMenu updater =
             , marginBottom (rem 2)
             ]
         ]
-        [ renderIcosahedronIcon Icons.Icosahedron.Type1 primaryColor
-            |> renderWorkType "Personal Projects" (updater PersonalProjects)
-        , renderIcosahedronIcon Icons.Icosahedron.Type2 primaryColor
-            |> renderWorkType "Research" (updater Research)
-        , renderIcosahedronIcon Icons.Icosahedron.Type3 primaryColor
-            |> renderWorkType "Industrial Experience" (updater IndustrialExperience)
+        [ renderIcosahedronIcon Icons.Icosahedron.Type1 theme.primaryColor
+            |> renderWorkType theme "Personal Projects" (updater PersonalProjects)
+        , renderIcosahedronIcon Icons.Icosahedron.Type2 theme.primaryColor
+            |> renderWorkType theme "Research" (updater Research)
+        , renderIcosahedronIcon Icons.Icosahedron.Type3 theme.primaryColor
+            |> renderWorkType theme "Industrial Experience" (updater IndustrialExperience)
         ]
 
 
-renderPersonalProjects : Html msg
-renderPersonalProjects =
+renderPersonalProjects : Theme -> Html msg
+renderPersonalProjects theme =
     div
         [ css
             [ displayFlex
             , overflowX scroll
 
+            --, maxWidth fitContent
             --, flexWrap wrap
             ]
         ]
-        (List.map renderProjectCard projects)
+        (List.map (renderProjectCard theme) projects)
 
 
-renderMyWorkPage : WorkType -> (WorkType -> msg) -> Html msg
-renderMyWorkPage w updater =
+renderMyWorkPage : Theme -> WorkType -> (WorkType -> msg) -> Html msg
+renderMyWorkPage theme w updater =
     let
         render =
             case w of
                 MainMenu ->
-                    renderMainMenu updater
+                    renderMainMenu theme updater
 
                 PersonalProjects ->
-                    renderSubPageLayout "Personal Projects" (updater MainMenu) <| renderPersonalProjects
+                    renderSubPageLayout theme "Personal Projects" (updater MainMenu) <| renderPersonalProjects theme
 
                 Research ->
-                    renderSubPageLayout "Research" (updater MainMenu) <| text "hello world"
+                    renderSubPageLayout theme "Research" (updater MainMenu) <| text "hello world"
 
                 IndustrialExperience ->
-                    renderSubPageLayout "Industrial Experience" (updater MainMenu) <| text "hello world"
+                    renderSubPageLayout theme "Industrial Experience" (updater MainMenu) <| text "hello world"
     in
     div
         [ css

@@ -3,7 +3,7 @@ module Head exposing (Head, headNameAndTag, viewHead)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Theme exposing (mainFonts, secondaryColor)
+import Theme exposing (Theme)
 
 
 type Head
@@ -15,13 +15,13 @@ headNameAndTag name tag =
     Head name tag
 
 
-viewHead : Head -> Html msg
-viewHead head =
+viewHead : Theme -> Head -> Html msg
+viewHead theme head =
     case head of
         Head name tag ->
             div
                 [ css
-                    [ fontFamilies mainFonts
+                    [ fontFamilies theme.mainFonts
                     , marginBottom (rem 3)
                     ]
                 ]
@@ -65,7 +65,7 @@ viewHead head =
                 , div
                     [ css
                         [ fontSize (rem 1)
-                        , color (hex secondaryColor)
+                        , color (hex theme.secondaryColor)
                         , opacity (num 0.64)
                         ]
                     ]

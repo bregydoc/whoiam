@@ -7,7 +7,7 @@ import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Settings.Languages exposing (LangSetting, renderLanguageSettings)
 import Settings.Themes exposing (ThemeSetting, renderThemeSettings)
-import Theme exposing (bgColor, mainFonts, primaryColor)
+import Theme exposing (Theme)
 
 
 type alias Settings =
@@ -16,8 +16,8 @@ type alias Settings =
     }
 
 
-renderSettingsModal : { close : msg, current : Settings, themeSelector : ThemeSetting -> msg, languageSelector : LangSetting -> msg } -> Html msg
-renderSettingsModal { close, current, themeSelector, languageSelector } =
+renderSettingsModal : Theme -> { close : msg, current : Settings, themeSelector : ThemeSetting -> msg, languageSelector : LangSetting -> msg } -> Html msg
+renderSettingsModal theme { close, current, themeSelector, languageSelector } =
     div
         [ css
             [ position absolute
@@ -29,7 +29,7 @@ renderSettingsModal { close, current, themeSelector, languageSelector } =
         [ div
             [ css
                 [ position absolute
-                , backgroundColor (hex bgColor)
+                , backgroundColor (hex theme.bgColor)
                 , opacity (num 0.85)
                 , width (pct 100)
                 , height (pct 100)
@@ -51,19 +51,19 @@ renderSettingsModal { close, current, themeSelector, languageSelector } =
                     [ displayFlex
                     , flexFlow1 column
                     , justifyContent center
-                    , color (hex primaryColor)
-                    , fontFamilies mainFonts
+                    , color (hex theme.primaryColor)
+                    , fontFamilies theme.mainFonts
                     ]
                 ]
                 [ div
                     [ css
-                        [ backgroundColor (hex bgColor)
+                        [ backgroundColor (hex theme.bgColor)
                         , padding (rem 1)
                         ]
                     ]
                     [ div
                         [ css
-                            [ border3 (px 1) solid (hex primaryColor)
+                            [ border3 (px 1) solid (hex theme.primaryColor)
                             , padding (rem 1)
                             ]
                         ]
@@ -77,7 +77,7 @@ renderSettingsModal { close, current, themeSelector, languageSelector } =
                             ]
                             [ div
                                 [ css
-                                    [ backgroundColor (hex bgColor)
+                                    [ backgroundColor (hex theme.bgColor)
                                     , padding2 zero (rem 1)
                                     , transforms [ translateY (rem -1.5) ]
                                     ]
@@ -89,8 +89,8 @@ renderSettingsModal { close, current, themeSelector, languageSelector } =
                                     []
                                 ]
                                 [ div []
-                                    [ renderThemeSettings current.theme themeSelector
-                                    , renderLanguageSettings current.language languageSelector
+                                    [ renderThemeSettings theme current.theme themeSelector
+                                    , renderLanguageSettings theme current.language languageSelector
                                     ]
                                 , div
                                     [ css

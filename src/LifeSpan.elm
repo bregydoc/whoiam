@@ -1,4 +1,4 @@
-module LifeSpan exposing (birthDay, lifePercent, lifeSpan)
+module LifeSpan exposing (lifePercent)
 
 import Time exposing (Month(..))
 import Time.Extra
@@ -12,10 +12,6 @@ birthDay zone =
 lifeSpan : Int
 lifeSpan =
     74
-
-
-
--- HELPERS
 
 
 lifePercent : Time.Zone -> Time.Posix -> Float

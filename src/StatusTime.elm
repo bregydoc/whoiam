@@ -1,7 +1,6 @@
 module StatusTime exposing (timeToDate, timeToStr)
 
-import Time exposing (Month(..), millisToPosix, utc)
-import Time.Extra as Time
+import Time exposing (Month(..))
 
 
 timeToStr : Time.Zone -> Time.Posix -> String

@@ -4,11 +4,11 @@ import Css exposing (bold, center, color, displayFlex, fontWeight, hex, lineHeig
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, target)
 import Icons.Minsky exposing (renderMinskyLogoWithScale)
-import Theme exposing (primaryColor)
+import Theme exposing (Theme)
 
 
-minskyBody : Html msg
-minskyBody =
+minskyBody : Theme -> Html msg
+minskyBody theme =
     div
         [ css
             [ marginTop (rem 2) ]
@@ -18,7 +18,7 @@ minskyBody =
                 [ marginLeft (rem 2)
                 ]
             ]
-            [ renderMinskyLogoWithScale 0.6 primaryColor
+            [ renderMinskyLogoWithScale 0.6 theme.primaryColor
             ]
         , div
             [ css
@@ -38,7 +38,7 @@ minskyBody =
                     [ href "https://minsky.cc"
                     , target "_blank"
                     , css
-                        [ color (hex primaryColor)
+                        [ color (hex theme.primaryColor)
                         , fontWeight bold
                         ]
                     ]

@@ -4,24 +4,29 @@ import Content.Projects exposing (Project, languageToString)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, target)
-import Theme exposing (primaryColor)
+import Theme exposing (Theme)
 
 
-renderProjectCard : Project -> Html msg
-renderProjectCard project =
+renderProjectCard : Theme -> Project -> Html msg
+renderProjectCard theme project =
     div
         [ css
             [ -- margin (rem 1)
-              border3 (px 1) solid (hex primaryColor)
+              border3 (px 1) solid (hex theme.primaryColor)
             , marginRight (rem 1.4)
             , minWidth (rem 18)
             , displayFlex
             , flexFlow1 column
+            , textDecoration none
+            , color (hex theme.primaryColor)
             ]
+
+        --, href project.link
+        --, Html.Styled.Attributes.target "_blank"
         ]
         [ div
             [ css
-                [ borderBottom3 (px 1) solid (hex primaryColor)
+                [ borderBottom3 (px 1) solid (hex theme.primaryColor)
                 , padding (rem 1)
                 ]
             ]
@@ -30,6 +35,7 @@ renderProjectCard project =
             [ css
                 [ padding (rem 1)
                 , lineHeight (rem 1.5)
+                , fontSize (rem 0.875)
                 ]
             ]
             [ text project.description ]
@@ -49,8 +55,9 @@ renderProjectCard project =
                 [ div
                     [ css
                         [ marginBottom (rem 0.5)
-                        , color (hex primaryColor)
+                        , color (hex theme.primaryColor)
                         , opacity (num 0.56)
+                        , fontSize (rem 0.875)
                         ]
                     ]
                     [ text "Language"
@@ -66,8 +73,9 @@ renderProjectCard project =
                 [ div
                     [ css
                         [ marginBottom (rem 0.5)
-                        , color (hex primaryColor)
+                        , color (hex theme.primaryColor)
                         , opacity (num 0.56)
+                        , fontSize (rem 0.875)
                         ]
                     ]
                     [ text "Stars"
@@ -79,7 +87,7 @@ renderProjectCard project =
         , div
             [ css
                 [ padding (rem 1)
-                , borderTop3 (px 1) solid (hex primaryColor)
+                , borderTop3 (px 1) solid (hex theme.primaryColor)
                 ]
             ]
             [ div
@@ -88,8 +96,8 @@ renderProjectCard project =
                     , justifyContent center
                     ]
                 ]
-                [ a [ href project.link, Html.Styled.Attributes.target "_blank", css [ color (hex primaryColor) ] ]
-                    [ text "OPEN"
+                [ a [ href project.link, Html.Styled.Attributes.target "_blank", css [ color (hex theme.primaryColor) ] ]
+                    [ text "see more"
                     ]
                 ]
             ]

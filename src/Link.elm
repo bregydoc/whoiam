@@ -1,4 +1,4 @@
-module Link exposing (Link(..), viewSocialLink)
+module Link exposing (Link(..), renderSocialLink)
 
 import Css exposing (..)
 import Css.Transitions exposing (transition)
@@ -9,7 +9,7 @@ import Icons.Github exposing (renderGithubIcon)
 import Icons.LinkedIn exposing (renderLinkedInIcon)
 import Icons.Mail exposing (renderMailIcon)
 import Icons.Phone exposing (renderPhoneIcon)
-import Theme exposing (mainFonts, primaryColor)
+import Theme exposing (Theme)
 
 
 type Link
@@ -19,12 +19,12 @@ type Link
     | Phone String
 
 
-viewSocialLayout : msg -> String -> Html msg -> Html msg
-viewSocialLayout open title icon =
+renderSocialLayout : Theme -> msg -> String -> Html msg -> Html msg
+renderSocialLayout theme open title icon =
     div
         [ css
             [ displayFlex
-            , fontFamilies mainFonts
+            , fontFamilies theme.mainFonts
             , fontSize (rem 0.875)
             , alignItems center
             , marginBottom (rem 0.8)
@@ -32,7 +32,7 @@ viewSocialLayout open title icon =
             , borderBottom3 (px 1) solid transparent
             , hover
                 [ cursor pointer
-                , borderBottom3 (px 1) solid (hex primaryColor)
+                , borderBottom3 (px 1) solid (hex theme.primaryColor)
                 ]
             , transition
                 [ Css.Transitions.borderBottom 333
@@ -54,17 +54,17 @@ viewSocialLayout open title icon =
         ]
 
 
-viewSocialLink : Link -> msg -> Html msg
-viewSocialLink link open =
+renderSocialLink : Theme -> Link -> msg -> Html msg
+renderSocialLink theme link open =
     case link of
         Email value ->
-            viewSocialLayout open value <| renderMailIcon primaryColor
+            renderSocialLayout theme open value <| renderMailIcon theme.primaryColor
 
         Github value ->
-            viewSocialLayout open value <| renderGithubIcon primaryColor
+            renderSocialLayout theme open value <| renderGithubIcon theme.primaryColor
 
         LinkedIn value ->
-            viewSocialLayout open value <| renderLinkedInIcon primaryColor
+            renderSocialLayout theme open value <| renderLinkedInIcon theme.primaryColor
 
         Phone value ->
-            viewSocialLayout open value <| renderPhoneIcon primaryColor
+            renderSocialLayout theme open value <| renderPhoneIcon theme.primaryColor

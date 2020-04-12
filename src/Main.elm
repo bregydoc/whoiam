@@ -1,19 +1,21 @@
 module Main exposing (main)
 
 import Browser
+import Browser.Dom exposing (getViewport)
+import Browser.Events exposing (onResize)
 import Browser.Navigation as Navigator
 import Css exposing (..)
 import Head exposing (headNameAndTag, viewHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Link exposing (Link, viewSocialLink)
+import Link exposing (Link, renderSocialLink)
 import Page exposing (Page, renderPages)
 import Settings.Languages exposing (LangSetting)
 import Settings.Settings exposing (Settings, renderSettingsModal)
 import Settings.Themes exposing (ThemeSetting)
 import StatusBar exposing (renderStatusBar)
 import Task
-import Theme exposing (bgColor, mainFonts, primaryColor)
+import Theme exposing (Theme, darkTheme, getScreenSize)
 import Time exposing (Month(..), millisToPosix, utc)
 
 
@@ -27,6 +29,7 @@ type alias Model =
     , time : Time.Posix
     , settingsModal : Bool
     , settings : Settings
+    , theme : Theme
     }
 
 
@@ -40,8 +43,11 @@ init =
             { language = Settings.Languages.EN
             , theme = Settings.Themes.Dark
             }
+      , theme = darkTheme
       }
-    , Task.perform AdjustTimeZone Time.here
+    , Task.perform PerformStart getViewport
+      --, Task.perform AdjustTimeZone Time.here
+      --|> Task.andThen ()
     )
 
 
@@ -57,6 +63,9 @@ type Msg
     | OpenSettings
     | CloseSettings
     | ChangeSettings Settings
+    | PerformStart Browser.Dom.Viewport
+    | ChangeWindowWidth Int
+    | AdjustWindowWidth Browser.Dom.Viewport
 
 
 
@@ -86,7 +95,52 @@ update msg model =
             ( { model | settingsModal = False }, Cmd.none )
 
         ChangeSettings newSettings ->
-            ( { model | settings = newSettings }, Cmd.none )
+            let
+                t =
+                    model.theme
+
+                newTheme =
+                    case newSettings.theme of
+                        Settings.Themes.Dark ->
+                            Theme.darkTheme
+
+                        Settings.Themes.Light ->
+                            Theme.lightTheme
+
+                finalTheme =
+                    { newTheme | device = t.device }
+            in
+            ( { model | settings = newSettings, theme = finalTheme }, Cmd.none )
+
+        PerformStart viewport ->
+            let
+                t =
+                    model.theme
+
+                newTheme =
+                    { t | device = getScreenSize <| Basics.round viewport.viewport.width }
+            in
+            ( { model | theme = newTheme }, Task.perform AdjustTimeZone Time.here )
+
+        ChangeWindowWidth width ->
+            let
+                t =
+                    model.theme
+
+                newTheme =
+                    { t | device = getScreenSize width }
+            in
+            ( { model | theme = newTheme }, Cmd.none )
+
+        AdjustWindowWidth viewport ->
+            let
+                t =
+                    model.theme
+
+                newTheme =
+                    { t | device = getScreenSize <| Basics.round viewport.viewport.width }
+            in
+            ( { model | theme = newTheme }, Cmd.none )
 
 
 
@@ -95,8 +149,8 @@ update msg model =
 --UpdateLanguage  ->
 
 
-renderSocialNetworks : Html Msg
-renderSocialNetworks =
+renderSocialNetworks : Theme -> Html Msg
+renderSocialNetworks theme =
     div
         [ css
             [ displayFlex
@@ -106,13 +160,13 @@ renderSocialNetworks =
             ]
         ]
         [ OpenLink "mailto:bregy.malpartida@utec.edu.pe"
-            |> viewSocialLink (Link.Email "bregy.malpartida@utec.edu.pe")
+            |> renderSocialLink theme (Link.Email "bregy.malpartida@utec.edu.pe")
         , OpenLink "https://github.com/bregydoc"
-            |> viewSocialLink (Link.Github "github.com/bregydoc")
+            |> renderSocialLink theme (Link.Github "github.com/bregydoc")
         , OpenLink "https://linkedin.com/in/bregy"
-            |> viewSocialLink (Link.LinkedIn "linkedin/bregy")
+            |> renderSocialLink theme (Link.LinkedIn "linkedin/bregy")
         , OpenLink "phone:+51957821858"
-            |> viewSocialLink (Link.Phone "+51957821858")
+            |> renderSocialLink theme (Link.Phone "+51957821858")
         ]
 
 
@@ -189,11 +243,12 @@ view model =
     div
         [ css
             [ minHeight (vh 100)
-            , backgroundColor (hex bgColor)
+            , backgroundColor (hex model.theme.bgColor)
             ]
         ]
         [ if model.settingsModal then
             renderSettingsModal
+                model.theme
                 { close = CloseSettings
                 , current = model.settings
                 , themeSelector = themeSelector model
@@ -206,21 +261,21 @@ view model =
             [ css
                 [ padding2 (rem 2) (rem 4)
                 , margin zero
-                , color (hex primaryColor)
+                , color (hex model.theme.primaryColor)
                 ]
             ]
-            [ OpenSettings |> renderStatusBar model.timeZone model.time
+            [ OpenSettings |> renderStatusBar model.theme model.timeZone model.time
             , div
                 [ css
                     [ displayFlex
                     , justifyContent spaceBetween
                     ]
                 ]
-                [ viewHead <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+                [ viewHead model.theme <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
                 , div []
-                    [ renderSocialNetworks ]
+                    [ renderSocialNetworks model.theme ]
                 ]
-            , renderPages model.currentPage pageUpdater
+            , renderPages model.theme model.currentPage pageUpdater
             ]
         ]
 
@@ -231,7 +286,10 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Time.every 1000 ClockTick
+    Sub.batch
+        [ Time.every 1000 ClockTick
+        , onResize (\w -> \_ -> ChangeWindowWidth w)
+        ]
 
 
 

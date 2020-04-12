@@ -5,7 +5,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Theme exposing (bgColor, mainFonts, primaryColor)
+import Theme exposing (Theme)
 
 
 type LangSetting
@@ -43,28 +43,28 @@ explainLanguage =
     "Language"
 
 
-renderOption : String -> Bool -> msg -> Html msg
-renderOption optionName selected select =
+renderOption : Theme -> String -> Bool -> msg -> Html msg
+renderOption theme optionName selected select =
     div
         [ css
             [ margin2 zero (rem 0.5)
             , padding (rem 0.2)
             , backgroundColor <|
                 if selected then
-                    hex primaryColor
+                    hex theme.primaryColor
 
                 else
-                    hex bgColor
+                    hex theme.bgColor
             , color <|
                 if selected then
-                    hex bgColor
+                    hex theme.bgColor
 
                 else
-                    hex primaryColor
+                    hex theme.primaryColor
             , hover
                 [ cursor pointer
-                , backgroundColor (hex primaryColor)
-                , color (hex bgColor)
+                , backgroundColor (hex theme.primaryColor)
+                , color (hex theme.bgColor)
                 ]
             , transition
                 [ Css.Transitions.backgroundColor 333
@@ -76,8 +76,8 @@ renderOption optionName selected select =
         ]
 
 
-renderLanguageSettings : LangSetting -> (LangSetting -> msg) -> Html msg
-renderLanguageSettings current selectionParser =
+renderLanguageSettings : Theme -> LangSetting -> (LangSetting -> msg) -> Html msg
+renderLanguageSettings theme current selectionParser =
     div []
         [ div
             [ css
@@ -95,8 +95,8 @@ renderLanguageSettings current selectionParser =
                     , marginBottom (rem 1.2)
                     ]
                 ]
-                [ renderOption (languageOptionString EN) (current == EN) (selectionParser EN)
-                , renderOption (languageOptionString ES) (current == ES) (selectionParser ES)
+                [ renderOption theme (languageOptionString EN) (current == EN) (selectionParser EN)
+                , renderOption theme (languageOptionString ES) (current == ES) (selectionParser ES)
                 ]
             ]
         ]

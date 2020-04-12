@@ -9,7 +9,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Theme exposing (bgColor, mainFonts, primaryColor)
+import Theme exposing (Theme)
 
 
 type Page
@@ -19,8 +19,8 @@ type Page
     | Minsky
 
 
-renderOptionButton : Page -> ( Page, msg ) -> Html msg
-renderOptionButton currentPage ( page, msg ) =
+renderOptionButton : Theme -> Page -> ( Page, msg ) -> Html msg
+renderOptionButton theme currentPage ( page, msg ) =
     let
         title =
             case page of
@@ -44,17 +44,17 @@ renderOptionButton currentPage ( page, msg ) =
         [ div
             [ css
                 [ if currentPage == page then
-                    color <| hex bgColor
+                    color <| hex theme.bgColor
 
                   else
-                    color <| hex primaryColor
+                    color <| hex theme.primaryColor
 
                 --
                 , if currentPage == page then
-                    backgroundColor <| hex primaryColor
+                    backgroundColor <| hex theme.primaryColor
 
                   else
-                    backgroundColor <| hex bgColor
+                    backgroundColor <| hex theme.bgColor
 
                 --
                 , if currentPage == page then
@@ -68,8 +68,8 @@ renderOptionButton currentPage ( page, msg ) =
                 , transforms [ translateY (rem -1.2) ]
                 , hover
                     [ cursor pointer
-                    , backgroundColor (hex primaryColor)
-                    , color (hex bgColor)
+                    , backgroundColor (hex theme.primaryColor)
+                    , color (hex theme.bgColor)
                     ]
                 , transition
                     [ Css.Transitions.backgroundColor 333
@@ -91,11 +91,11 @@ pages =
     ]
 
 
-renderPages : Page -> (Page -> msg) -> Html msg
-renderPages currentPage updatePage =
+renderPages : Theme -> Page -> (Page -> msg) -> Html msg
+renderPages theme currentPage updatePage =
     div
         [ css
-            [ border3 (px 1.0) solid (hex primaryColor)
+            [ border3 (px 1.0) solid (hex theme.primaryColor)
             , transition
                 [ Css.Transitions.height 333
                 ]
@@ -104,33 +104,33 @@ renderPages currentPage updatePage =
         [ div
             [ css
                 [ displayFlex
-                , fontFamilies mainFonts
+                , fontFamilies theme.mainFonts
 
                 --, margin2 zero zero
                 --, marginBottom (rem -1)
                 ]
             ]
             (List.map (\page -> ( page, updatePage page )) pages
-                |> List.map (renderOptionButton currentPage)
+                |> List.map (renderOptionButton theme currentPage)
             )
         , div
             [ css
-                [ fontFamilies mainFonts
+                [ fontFamilies theme.mainFonts
                 ]
             ]
             [ div []
                 [ case currentPage of
                     AboutMe ->
-                        aboutBody
+                        aboutBody theme
 
                     MyInterests ->
                         myInterestsBody
 
                     MyWork currentWork ->
-                        renderMyWorkPage currentWork <| \w -> updatePage (MyWork w)
+                        renderMyWorkPage theme currentWork <| \w -> updatePage (MyWork w)
 
                     Minsky ->
-                        minskyBody
+                        minskyBody theme
                 ]
             ]
         ]
