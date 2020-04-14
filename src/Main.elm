@@ -3,7 +3,6 @@ module Main exposing (main)
 import Browser
 import Browser.Dom exposing (getViewport)
 import Browser.Events exposing (onResize)
-import Browser.Navigation as Navigator
 import Css exposing (..)
 import Head exposing (headNameAndTag, renderHead)
 import Html.Styled exposing (..)
@@ -12,7 +11,7 @@ import Page exposing (Page, renderPages)
 import Settings.Languages exposing (LangSetting)
 import Settings.Settings exposing (Settings, renderSettingsModal)
 import Settings.Themes exposing (ThemeSetting)
-import SocialNetworks exposing (renderHorizontalSocialNetworks, renderSocialNetworks)
+import SocialNetworks exposing (renderSocialNetworks)
 import StatusBar exposing (renderStatusBar)
 import Task
 import Theme exposing (Theme, darkTheme, getScreenSize)
@@ -33,17 +32,23 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    { currentDate : Int
+    , width : Int
+    }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( { currentPage = Page.AboutMe
       , timeZone = utc
-      , time = millisToPosix 0
+      , time = millisToPosix flags.currentDate
       , settingsModal = False
       , settings =
             { language = Settings.Languages.EN
             , theme = Settings.Themes.Dark
             }
-      , theme = darkTheme
+      , theme = { darkTheme | device = getScreenSize flags.width }
       }
     , Task.perform PerformStart getViewport
       --, Task.perform AdjustTimeZone Time.here
@@ -57,7 +62,6 @@ init =
 
 type Msg
     = ChangePage Page
-    | OpenLink String
     | ClockTick Time.Posix
     | AdjustTimeZone Time.Zone
     | OpenSettings
@@ -65,7 +69,6 @@ type Msg
     | ChangeSettings Settings
     | PerformStart Browser.Dom.Viewport
     | ChangeWindowWidth Int
-    | AdjustWindowWidth Browser.Dom.Viewport
 
 
 
@@ -78,9 +81,6 @@ update msg model =
     case msg of
         ChangePage page ->
             ( { model | currentPage = page }, Cmd.none )
-
-        OpenLink link ->
-            ( model, Navigator.load link )
 
         AdjustTimeZone zone ->
             ( { model | timeZone = zone }, Cmd.none )
@@ -129,16 +129,6 @@ update msg model =
 
                 newTheme =
                     { t | device = getScreenSize width }
-            in
-            ( { model | theme = newTheme }, Cmd.none )
-
-        AdjustWindowWidth viewport ->
-            let
-                t =
-                    model.theme
-
-                newTheme =
-                    { t | device = getScreenSize <| Basics.round viewport.viewport.width }
             in
             ( { model | theme = newTheme }, Cmd.none )
 
@@ -313,11 +303,11 @@ subscriptions _ =
 ---- PROGRAM ----
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
         { view = view >> toUnstyled
-        , init = \_ -> init
+        , init = init
         , update = update
         , subscriptions = subscriptions
         }

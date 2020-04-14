@@ -24,7 +24,7 @@ darkTheme =
     { mainFonts = [ "PT Mono", "monospace" ]
     , primaryColor = "#50f2d5"
     , secondaryColor = "#ffffff"
-    , bgColor = "#000000"
+    , bgColor = "#000000 "
     , device = Desktop
     }
 
