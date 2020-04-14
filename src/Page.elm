@@ -93,8 +93,8 @@ pages =
     ]
 
 
-renderPages : Theme -> Language -> Page -> (Page -> msg) -> Html msg
-renderPages theme lang currentPage updatePage =
+renderPages : Theme -> Language -> msg -> Page -> (Page -> msg) -> Html msg
+renderPages theme lang openSettings currentPage updatePage =
     let
         optionsBar =
             if theme.device == Theme.Phone then
@@ -115,6 +115,7 @@ renderPages theme lang currentPage updatePage =
                             , marginRight (rem 1.2)
                             , padding4 (rem 0.6) (rem 0.4) (rem 0.4) (rem 0.4)
                             ]
+                        , onClick openSettings
                         ]
                         [ renderDownArrow theme.primaryColor ]
                     ]

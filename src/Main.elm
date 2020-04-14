@@ -370,7 +370,7 @@ view model =
                   else
                     div [] []
                 ]
-            , renderPages model.theme (corpusLang model) model.currentPage pageUpdater
+            , renderPages model.theme (corpusLang model) OpenSettings model.currentPage pageUpdater
             ]
         ]
 
