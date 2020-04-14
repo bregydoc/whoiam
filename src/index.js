@@ -21,7 +21,6 @@ const app = Elm.Main.init({
 });
 
 app.ports.saveSettings.subscribe((settings) => {
-    console.log("settings coming", settings);
     const settingsStr = JSON.stringify(settings);
     localStorage.setItem("settings", settingsStr);
 });

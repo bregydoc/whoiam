@@ -9,6 +9,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import Icons.DownArrow exposing (renderDownArrow)
 import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
@@ -97,8 +98,25 @@ renderPages theme lang currentPage updatePage =
     let
         optionsBar =
             if theme.device == Theme.Phone then
-                [ div []
+                [ div
+                    [ css
+                        [ displayFlex
+                        , width (pct 100)
+                        ]
+                    ]
                     [ renderOptionButton theme lang currentPage <| ( currentPage, updatePage currentPage )
+                    , div
+                        [ css
+                            [ transforms [ translateY (rem -1.2) ]
+                            , marginLeft auto
+                            , displayFlex
+                            , alignItems center
+                            , backgroundColor (hex theme.bgColor)
+                            , marginRight (rem 1.2)
+                            , padding4 (rem 0.6) (rem 0.4) (rem 0.4) (rem 0.4)
+                            ]
+                        ]
+                        [ renderDownArrow theme.primaryColor ]
                     ]
                 ]
 
