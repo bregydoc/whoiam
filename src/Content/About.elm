@@ -41,7 +41,25 @@ aboutBody theme lang =
                 , lineHeight (rem 2)
                 ]
             ]
-            [ text <| read lang "aboutme_content" mainCorpus ]
+            [ div
+                []
+                [ text <| read lang "aboutme_contentmain" mainCorpus
+                ]
+            , div
+                [ css [ marginTop (rem 1.8) ]
+                ]
+                [ div
+                    [ css
+                        [ fontSize (rem 1.6)
+                        , fontWeight bold
+                        , marginBottom (rem 0.6)
+                        ]
+                    ]
+                    [ text <| read lang "aboutme_contentpersonaltitle" mainCorpus ]
+                , div []
+                    [ text <| read lang "aboutme_contentpersonal" mainCorpus ]
+                ]
+            ]
         , div
             [ css
                 [ if theme.device == Theme.Phone || theme.device == Theme.Tablet then

@@ -7,18 +7,22 @@ import Link exposing (Link, renderSocialIconLink, renderSocialLink)
 import Theme exposing (Theme)
 
 
+bregyEmail : String
 bregyEmail =
     "mailto:bregy.malpartida@utec.edu.pe"
 
 
+bregyGithub : String
 bregyGithub =
     "https://github.com/bregydoc"
 
 
+bregyLinkedIn : String
 bregyLinkedIn =
     "https://linkedin.com/in/bregy"
 
 
+bregyPhone : String
 bregyPhone =
     "tel:+51957821858"
 
