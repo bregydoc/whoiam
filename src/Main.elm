@@ -8,6 +8,7 @@ import Head exposing (renderHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Page exposing (Page, renderPages)
+import Ports exposing (StoreSettings, saveSettings)
 import Settings.Languages exposing (LangSetting)
 import Settings.Settings exposing (Settings, renderSettingsModal)
 import Settings.Themes exposing (ThemeSetting)
@@ -33,6 +34,73 @@ corpusLang model =
             TextResource.ES
 
 
+settingsToSave : Settings -> StoreSettings
+settingsToSave settings =
+    let
+        lang =
+            case settings.language of
+                Settings.Languages.EN ->
+                    "EN"
+
+                Settings.Languages.ES ->
+                    "ES"
+
+        theme =
+            case settings.theme of
+                Settings.Themes.Light ->
+                    "Light"
+
+                Settings.Themes.Dark ->
+                    "Dark"
+    in
+    { language = lang, theme = theme }
+
+
+settingsFromStore : StoreSettings -> Settings
+settingsFromStore store =
+    let
+        lang =
+            case store.language of
+                "EN" ->
+                    Settings.Languages.EN
+
+                "ES" ->
+                    Settings.Languages.ES
+
+                _ ->
+                    Settings.Languages.EN
+
+        theme =
+            case store.theme of
+                "Light" ->
+                    Settings.Themes.Light
+
+                "Dark" ->
+                    Settings.Themes.Dark
+
+                _ ->
+                    Settings.Themes.Dark
+    in
+    { language = lang, theme = theme }
+
+
+themeFromStoreAndWidth : StoreSettings -> Int -> Theme
+themeFromStoreAndWidth store width =
+    let
+        settings =
+            settingsFromStore store
+
+        theme =
+            case settings.theme of
+                Settings.Themes.Light ->
+                    Theme.lightTheme
+
+                Settings.Themes.Dark ->
+                    Theme.darkTheme
+    in
+    { theme | device = getScreenSize width }
+
+
 
 ---- MODEL ----
 
@@ -52,6 +120,7 @@ type alias Model =
 type alias Flags =
     { currentDate : Int
     , width : Int
+    , settings : StoreSettings
     }
 
 
@@ -61,11 +130,8 @@ init flags =
       , timeZone = utc
       , time = millisToPosix flags.currentDate
       , settingsModal = False
-      , settings =
-            { language = Settings.Languages.EN
-            , theme = Settings.Themes.Dark
-            }
-      , theme = { darkTheme | device = getScreenSize flags.width }
+      , settings = settingsFromStore flags.settings
+      , theme = themeFromStoreAndWidth flags.settings flags.width
       }
     , Task.perform PerformStart getViewport
       --, Task.perform AdjustTimeZone Time.here
@@ -89,6 +155,7 @@ type Msg
 
 
 
+-- | SaveSettingsToLocalStorage StoreSettings
 --| UpdateTheme
 --| UpdateLanguage
 
@@ -127,7 +194,7 @@ update msg model =
                 finalTheme =
                     { newTheme | device = t.device }
             in
-            ( { model | settings = newSettings, theme = finalTheme }, Cmd.none )
+            ( { model | settings = newSettings, theme = finalTheme }, saveSettings <| settingsToSave newSettings )
 
         PerformStart viewport ->
             let
@@ -151,6 +218,9 @@ update msg model =
 
 
 
+-- SaveSettingsToLocalStorage settings ->
+--     -- saveSettings <| settingsToSave model
+--     ( model, Cmd.none )
 --UpdateTheme ->
 --
 --UpdateLanguage  ->

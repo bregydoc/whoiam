@@ -64,14 +64,45 @@ aboutBody theme lang =
                 ]
                 [ div
                     [ css
-                        [ fontSize (rem 1.6)
+                        [ if theme.device /= Theme.Phone then
+                            fontSize (rem 1.6)
+
+                          else
+                            fontSize (rem 1.3)
                         , fontWeight bold
+                        , opacity (num 0.6)
                         , marginBottom (rem 0.6)
                         ]
                     ]
                     [ text <| read lang "aboutme_contentpersonaltitle" mainCorpus ]
                 , div []
                     [ text <| read lang "aboutme_contentpersonal" mainCorpus ]
+                ]
+            , div
+                [ css [ marginTop (rem 1.8) ]
+                ]
+                [ div
+                    [ css
+                        [ if theme.device /= Theme.Phone then
+                            fontSize (rem 0.875)
+
+                          else
+                            fontSize (rem 0.875)
+                        , lineHeight (rem 1)
+                        , fontStyle italic
+
+                        -- , fontVariant italic
+                        , marginTop (rem 0.6)
+                        ]
+                    ]
+                    [ text <| read lang "aboutme_contentcite" mainCorpus ]
+                , div
+                    [ css
+                        [ opacity (num 0.6)
+                        , fontSize (rem 0.875)
+                        ]
+                    ]
+                    [ text <| "— " ++ read lang "aboutme_contentciteleonardo" mainCorpus ]
                 ]
             ]
         , div

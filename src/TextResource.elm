@@ -137,7 +137,17 @@ mainCorpus =
               )
             , ( "aboutme_contentpersonal"
               , [ ( EN, "For as long as I can remember I have been interested in how things work, I have always felt the need to know the details behind something in order to be able to recreate it. In a completely intentional way, being in high school, I discovered the world of programming and electronics, since then I have had abstraction as my main knowledge tool (although I would not know until several years later). I have had the opportunity to collaborate in some multidisciplinary projects and I have noticed that there is an inherent continuity in human knowledge and that it is necessary for us to be aware of this as it is necessary to face the future that is coming." )
-                , ( ES, "Desde que recuerdo he estado interesado en el funcionamiento de las cosas, siempre he sentido la necesidad de saber los detalles detrás de algo en funcionamiento con la finalidad de poder recrearlo. De manera totalmente intencionada, estando en la secundaria, descubrí el mundo de la programación y la electrónica, desde ese entonces he tenido como principal herramienta de conocimiento a la abstracción (aunque no lo sabría hasta pasados varios años). He tenido la oportunidad de colaborar en algunos proyectos multidisciplinarios y he podido notar que existe una continuidad inherente en el conocimiento humano y que es necesario que seamos conscientes de eso ya que es necesario para enfrentar el futuro que se adviene." )
+                , ( ES, "Desde que recuerdo he estado interesado en el funcionamiento de las cosas, siempre he sentido la necesidad de saber los detalles detrás de algo en funcionamiento con la finalidad de poder recrearlo. De manera totalmente intencionada, estando en la secundaria, descubrí el mundo de la programación y la electrónica, desde ese entonces he tenido como principal herramienta de conocimiento a la abstracción (aunque no lo sabría hasta pasados varios años). He tenido la oportunidad de colaborar en algunos proyectos multidisciplinarios y he podido notar que existe una continuidad inherente en el conocimiento humano y que es necesario que seamos conscientes de eso ya que es algo que muy útil para enfrentar el futuro que se adviene." )
+                ]
+              )
+            , ( "aboutme_contentcite"
+              , [ ( EN, "The noblest pleasure is the joy of understanding" )
+                , ( ES, "El placer más noble es el júbilo de comprender." )
+                ]
+              )
+            , ( "aboutme_contentciteleonardo"
+              , [ ( EN, "Leonardo da Vinci" )
+                , ( ES, "Leonardo da Vinci" )
                 ]
               )
             , ( "mywork_personal"
