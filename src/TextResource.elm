@@ -126,7 +126,7 @@ mainCorpus =
                 ]
               )
             , ( "aboutme_contentmain"
-              , [ ( EN, "I am dedicated to creating things, especially digital things. In recent years I have focused on research and development of computer systems with a focus on emerging technologies. I am convinced that at present we can strongly impact with these technologies on the reality of our country, taking advantage of the opportunities offered by this time of interconnection and virtuality." )
+              , [ ( EN, "I dedicate myself to creating things, especially digital things. In recent years I have focused on research and development of computer systems with a focus on emerging technologies. I am convinced that at present we can strongly impact with these technologies on the reality of our country, taking advantage of the opportunities offered by this time of interconnection and virtuality." )
                 , ( ES, "Me dedico a crear cosas, en especial cosas digitales. En los últimos años me he centrado en la investigación y desarrollo de sistemas computacionales con un enfoque en tecnologías emergentes. Estoy convencido de que en la actualidad podemos impactar fuertemente con dichas tecnologías en la realidad de nuestro país aprovechando las oportunidades que nos brinda esta época de interconexión y virtualidad." )
                 ]
               )
