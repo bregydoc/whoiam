@@ -21,23 +21,37 @@ aboutBody theme lang =
 
                 _ ->
                     columnReverse
+
+        owlScale =
+            case theme.device of
+                Theme.BigDesktop ->
+                    1
+
+                Theme.Desktop ->
+                    0.8
+
+                Theme.Tablet ->
+                    0.75
+
+                Theme.Phone ->
+                    0.6
     in
     div
         [ css
             [ displayFlex
             , flexFlow1 flow
             , margin (rem 2)
-            , if theme.device == Theme.Phone || theme.device == Theme.Tablet then
-                alignItems center
-
-              else
-                alignItems start
+            , alignItems center
             ]
         ]
         [ div
             [ css
                 [ flexGrow (num 1)
-                , paddingRight (rem 1)
+                , if theme.device /= Theme.Desktop then
+                    marginRight zero
+
+                  else
+                    marginRight (rem 2.5)
                 , lineHeight (rem 2)
                 ]
             ]
@@ -69,5 +83,5 @@ aboutBody theme lang =
                     margin zero
                 ]
             ]
-            [ renderOwlIconWithScale 0.75 theme.primaryColor ]
+            [ renderOwlIconWithScale owlScale theme.primaryColor ]
         ]
