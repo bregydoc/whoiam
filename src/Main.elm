@@ -4,7 +4,7 @@ import Browser
 import Browser.Dom exposing (getViewport)
 import Browser.Events exposing (onResize)
 import Css exposing (..)
-import Head exposing (headNameAndTag, renderHead)
+import Head exposing (renderHead)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Page exposing (Page, renderPages)
@@ -14,8 +14,23 @@ import Settings.Themes exposing (ThemeSetting)
 import SocialNetworks exposing (renderSocialNetworks)
 import StatusBar exposing (renderStatusBar)
 import Task
+import TextResource exposing (Language(..))
 import Theme exposing (Theme, darkTheme, getScreenSize)
 import Time exposing (Month(..), millisToPosix, utc)
+
+
+
+-- HELPERS --
+
+
+corpusLang : Model -> TextResource.Language
+corpusLang model =
+    case model.settings.language of
+        Settings.Languages.EN ->
+            TextResource.EN
+
+        Settings.Languages.ES ->
+            TextResource.ES
 
 
 
@@ -29,6 +44,8 @@ type alias Model =
     , settingsModal : Bool
     , settings : Settings
     , theme : Theme
+
+    -- , corpus : Corpus
     }
 
 
@@ -247,6 +264,7 @@ view model =
         [ if model.settingsModal then
             renderSettingsModal
                 model.theme
+                (corpusLang model)
                 { close = CloseSettings
                 , current = model.settings
                 , themeSelector = themeSelector model
@@ -262,7 +280,7 @@ view model =
                 , color (hex model.theme.primaryColor)
                 ]
             ]
-            [ OpenSettings |> renderStatusBar model.theme model.timeZone model.time
+            [ OpenSettings |> renderStatusBar model.theme (corpusLang model) model.timeZone model.time
             , div
                 [ css
                     [ displayFlex
@@ -273,7 +291,7 @@ view model =
                         justifyContent spaceBetween
                     ]
                 ]
-                [ renderHead model.theme <| headNameAndTag "Bregy Malpartida" "Passionate about human knowledge"
+                [ renderHead model.theme <| corpusLang model
                 , if model.theme.device == Theme.Desktop then
                     div
                         []
@@ -282,7 +300,7 @@ view model =
                   else
                     div [] []
                 ]
-            , renderPages model.theme model.currentPage pageUpdater
+            , renderPages model.theme (corpusLang model) model.currentPage pageUpdater
             ]
         ]
 

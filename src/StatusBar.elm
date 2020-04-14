@@ -9,12 +9,13 @@ import Icons.Battery exposing (renderBatteryIcon)
 import LifeSpan exposing (lifePercent)
 import Round
 import StatusTime exposing (timeToDate, timeToStr)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 import Time exposing (Month(..), millisToPosix)
 
 
-renderStatusBar : Theme -> Time.Zone -> Time.Posix -> msg -> Html msg
-renderStatusBar theme zone time openSettings =
+renderStatusBar : Theme -> Language -> Time.Zone -> Time.Posix -> msg -> Html msg
+renderStatusBar theme lang zone time openSettings =
     div
         [ css
             [ displayFlex
@@ -66,7 +67,7 @@ renderStatusBar theme zone time openSettings =
                     ]
                 , onClick openSettings
                 ]
-                [ text "settings" ]
+                [ text <| read lang "settings" mainCorpus ]
 
           else
             div [] []

@@ -5,6 +5,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
@@ -15,13 +16,13 @@ type ThemeSetting
 
 themes : List ( ThemeSetting, String )
 themes =
-    [ ( Light, "Light" )
-    , ( Dark, "Dark" )
+    [ ( Light, "settings_colortheme_light" )
+    , ( Dark, "settings_colortheme_dark" )
     ]
 
 
-themeOptionString : ThemeSetting -> String
-themeOptionString option =
+themeOptionString : ThemeSetting -> Language -> String
+themeOptionString option lang =
     let
         head =
             List.filter (\( opt, _ ) -> option == opt) themes
@@ -30,17 +31,12 @@ themeOptionString option =
         theme =
             case head of
                 Just ( _, v ) ->
-                    v
+                    read lang v mainCorpus
 
                 Nothing ->
                     ""
     in
     theme
-
-
-explainTheme : String
-explainTheme =
-    "Color Theme"
 
 
 renderOption : Theme -> String -> Bool -> msg -> Html msg
@@ -76,8 +72,8 @@ renderOption theme optionName selected select =
         ]
 
 
-renderThemeSettings : Theme -> ThemeSetting -> (ThemeSetting -> msg) -> Html msg
-renderThemeSettings theme current selectionParser =
+renderThemeSettings : Theme -> Language -> ThemeSetting -> (ThemeSetting -> msg) -> Html msg
+renderThemeSettings theme lang current selectionParser =
     div []
         [ div
             [ css
@@ -85,7 +81,7 @@ renderThemeSettings theme current selectionParser =
                 , opacity (num 0.6)
                 ]
             ]
-            [ text explainTheme
+            [ text <| read lang "settings_colortheme" mainCorpus
             ]
         , div []
             [ div
@@ -95,8 +91,8 @@ renderThemeSettings theme current selectionParser =
                     , marginBottom (rem 1.2)
                     ]
                 ]
-                [ renderOption theme (themeOptionString Light) (current == Light) (selectionParser Light)
-                , renderOption theme (themeOptionString Dark) (current == Dark) (selectionParser Dark)
+                [ renderOption theme (themeOptionString Light lang) (current == Light) (selectionParser Light)
+                , renderOption theme (themeOptionString Dark lang) (current == Dark) (selectionParser Dark)
                 ]
             ]
         ]

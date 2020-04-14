@@ -4,11 +4,12 @@ import Content.Projects exposing (Project, languageToString)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, target)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
-renderProjectCard : Theme -> Project -> Html msg
-renderProjectCard theme project =
+renderProjectCard : Theme -> Language -> Project -> Html msg
+renderProjectCard theme lang project =
     div
         [ css
             [ -- margin (rem 1)
@@ -60,7 +61,7 @@ renderProjectCard theme project =
                         , fontSize (rem 0.875)
                         ]
                     ]
-                    [ text "Language"
+                    [ text <| read lang "programminglang" mainCorpus
                     ]
                 , div []
                     [ text <| languageToString project.language ]
@@ -78,7 +79,7 @@ renderProjectCard theme project =
                         , fontSize (rem 0.875)
                         ]
                     ]
-                    [ text "Stars"
+                    [ text <| read lang "stars" mainCorpus
                     ]
                 , div []
                     [ text <| String.fromInt project.stars ]
@@ -97,7 +98,7 @@ renderProjectCard theme project =
                     ]
                 ]
                 [ a [ href project.link, Html.Styled.Attributes.target "_blank", css [ color (hex theme.primaryColor) ] ]
-                    [ text "see more"
+                    [ text <| read lang "seemore" mainCorpus
                     ]
                 ]
             ]

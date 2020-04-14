@@ -4,11 +4,12 @@ import Css exposing (bold, center, color, displayFlex, fontWeight, hex, lineHeig
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, target)
 import Icons.Minsky exposing (renderMinskyLogoWithScale)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
-minskyBody : Theme -> Html msg
-minskyBody theme =
+minskyBody : Theme -> Language -> Html msg
+minskyBody theme lang =
     div
         [ css
             [ marginTop (rem 2) ]
@@ -27,13 +28,12 @@ minskyBody theme =
                 , margin2 (rem 1) (rem 2)
                 ]
             ]
-            [ text "Minsky is a peruvian initiative to boost our country (Peru) with technology."
-            , text " The main goal of Minsky is generate digital products for the community based on open source and modern technologies stack."
+            [ text <| read lang "minsky_summary" mainCorpus
             , div
                 [ css
                     [ marginTop (rem 1) ]
                 ]
-                [ text "See more at our homepage "
+                [ text <| read lang "minsky_action" mainCorpus ++ " "
                 , a
                     [ href "https://minsky.cc"
                     , target "_blank"

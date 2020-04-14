@@ -4,11 +4,12 @@ import Css exposing (..)
 import Html.Styled exposing (Html, div, text)
 import Html.Styled.Attributes exposing (css)
 import Icons.Owl exposing (renderOwlIconWithScale)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
-aboutBody : Theme -> Html msg
-aboutBody theme =
+aboutBody : Theme -> Language -> Html msg
+aboutBody theme lang =
     let
         flow =
             case theme.device of
@@ -40,7 +41,7 @@ aboutBody theme =
                 , lineHeight (rem 2)
                 ]
             ]
-            [ text "Work in progress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac mauris eleifend, pulvinar lorem at, efficitur lacus. Nulla vel lacinia lacus. Etiam tristique nisl tincidunt, faucibus turpis consectetur, imperdiet enim. Sed eros arcu, accumsan vel auctor ac, dictum in velit. Aenean suscipit nunc vel velit sodales, eu vestibulum arcu ultricies. Vivamus lacus lacus, dignissim vel lobortis et, placerat gravida eros. Nam nec lobortis dolor. Morbi ut lacus in tortor pharetra bibendum." ]
+            [ text <| read lang "aboutme_content" mainCorpus ]
         , div
             [ css
                 [ if theme.device == Theme.Phone || theme.device == Theme.Tablet then

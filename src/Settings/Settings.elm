@@ -7,6 +7,7 @@ import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Settings.Languages exposing (LangSetting, renderLanguageSettings)
 import Settings.Themes exposing (ThemeSetting, renderThemeSettings)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
@@ -16,8 +17,8 @@ type alias Settings =
     }
 
 
-renderSettingsModal : Theme -> { close : msg, current : Settings, themeSelector : ThemeSetting -> msg, languageSelector : LangSetting -> msg } -> Html msg
-renderSettingsModal theme { close, current, themeSelector, languageSelector } =
+renderSettingsModal : Theme -> Language -> { close : msg, current : Settings, themeSelector : ThemeSetting -> msg, languageSelector : LangSetting -> msg } -> Html msg
+renderSettingsModal theme lang { close, current, themeSelector, languageSelector } =
     div
         [ css
             [ position absolute
@@ -82,15 +83,15 @@ renderSettingsModal theme { close, current, themeSelector, languageSelector } =
                                     , transforms [ translateY (rem -1.5) ]
                                     ]
                                 ]
-                                [ text "Settings"
+                                [ text <| read lang "settings" mainCorpus
                                 ]
                             , div
                                 [ css
                                     []
                                 ]
                                 [ div []
-                                    [ renderThemeSettings theme current.theme themeSelector
-                                    , renderLanguageSettings theme current.language languageSelector
+                                    [ renderThemeSettings theme lang current.theme themeSelector
+                                    , renderLanguageSettings theme lang current.language languageSelector
                                     ]
                                 , div
                                     [ css
@@ -104,7 +105,7 @@ renderSettingsModal theme { close, current, themeSelector, languageSelector } =
                                         ]
                                     , onClick close
                                     ]
-                                    [ text "Close"
+                                    [ text <| read lang "settings_close" mainCorpus
                                     ]
                                 ]
                             ]

@@ -5,6 +5,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
@@ -15,13 +16,13 @@ type LangSetting
 
 languages : List ( LangSetting, String )
 languages =
-    [ ( EN, "English" )
-    , ( ES, "Spanish" )
+    [ ( EN, "settings_language_english" )
+    , ( ES, "settings_language_spanish" )
     ]
 
 
-languageOptionString : LangSetting -> String
-languageOptionString lang =
+languageOptionString : LangSetting -> Language -> String
+languageOptionString lang programLang =
     let
         head =
             List.filter (\( opt, _ ) -> lang == opt) languages
@@ -30,17 +31,12 @@ languageOptionString lang =
         language =
             case head of
                 Just ( _, v ) ->
-                    v
+                    read programLang v mainCorpus
 
                 Nothing ->
                     ""
     in
     language
-
-
-explainLanguage : String
-explainLanguage =
-    "Language"
 
 
 renderOption : Theme -> String -> Bool -> msg -> Html msg
@@ -76,8 +72,8 @@ renderOption theme optionName selected select =
         ]
 
 
-renderLanguageSettings : Theme -> LangSetting -> (LangSetting -> msg) -> Html msg
-renderLanguageSettings theme current selectionParser =
+renderLanguageSettings : Theme -> Language -> LangSetting -> (LangSetting -> msg) -> Html msg
+renderLanguageSettings theme lang current selectionParser =
     div []
         [ div
             [ css
@@ -85,7 +81,7 @@ renderLanguageSettings theme current selectionParser =
                 , opacity (num 0.6)
                 ]
             ]
-            [ text explainLanguage
+            [ text <| read lang "settings_language" mainCorpus
             ]
         , div []
             [ div
@@ -95,8 +91,8 @@ renderLanguageSettings theme current selectionParser =
                     , marginBottom (rem 1.2)
                     ]
                 ]
-                [ renderOption theme (languageOptionString EN) (current == EN) (selectionParser EN)
-                , renderOption theme (languageOptionString ES) (current == ES) (selectionParser ES)
+                [ renderOption theme (languageOptionString EN lang) (current == EN) (selectionParser EN)
+                , renderOption theme (languageOptionString ES lang) (current == ES) (selectionParser ES)
                 ]
             ]
         ]

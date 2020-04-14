@@ -39,11 +39,6 @@ lightTheme =
     }
 
 
-mainTheme : Theme
-mainTheme =
-    darkTheme
-
-
 
 -- #291d39
 

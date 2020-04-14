@@ -8,7 +8,8 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Icons.BackArrow exposing (renderBackArrowIcon)
-import Icons.Icosahedron exposing (Icosahedron, renderIcosahedronIcon)
+import Icons.Icosahedron exposing (renderIcosahedronIcon)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
@@ -130,8 +131,8 @@ renderWorkType theme title selected icon =
         ]
 
 
-renderMainMenu : Theme -> (WorkType -> msg) -> Html msg
-renderMainMenu theme updater =
+renderMainMenu : Theme -> Language -> (WorkType -> msg) -> Html msg
+renderMainMenu theme lang updater =
     div
         [ css
             [ displayFlex
@@ -142,16 +143,16 @@ renderMainMenu theme updater =
             ]
         ]
         [ renderIcosahedronIcon Icons.Icosahedron.Type1 theme.primaryColor
-            |> renderWorkType theme "Personal Projects" (updater PersonalProjects)
+            |> renderWorkType theme (read lang "mywork_personal" mainCorpus) (updater PersonalProjects)
         , renderIcosahedronIcon Icons.Icosahedron.Type2 theme.primaryColor
-            |> renderWorkType theme "Research" (updater Research)
+            |> renderWorkType theme (read lang "mywork_research" mainCorpus) (updater Research)
         , renderIcosahedronIcon Icons.Icosahedron.Type3 theme.primaryColor
-            |> renderWorkType theme "Industrial Experience" (updater IndustrialExperience)
+            |> renderWorkType theme (read lang "mywork_industrial" mainCorpus) (updater IndustrialExperience)
         ]
 
 
-renderPersonalProjects : Theme -> Html msg
-renderPersonalProjects theme =
+renderPersonalProjects : Theme -> Language -> Html msg
+renderPersonalProjects theme lang =
     div
         [ css
             [ displayFlex
@@ -161,25 +162,25 @@ renderPersonalProjects theme =
             --, flexWrap wrap
             ]
         ]
-        (List.map (renderProjectCard theme) projects)
+        (List.map (renderProjectCard theme lang) projects)
 
 
-renderMyWorkPage : Theme -> WorkType -> (WorkType -> msg) -> Html msg
-renderMyWorkPage theme w updater =
+renderMyWorkPage : Theme -> Language -> WorkType -> (WorkType -> msg) -> Html msg
+renderMyWorkPage theme lang w updater =
     let
         render =
             case w of
                 MainMenu ->
-                    renderMainMenu theme updater
+                    renderMainMenu theme lang updater
 
                 PersonalProjects ->
-                    renderSubPageLayout theme "Personal Projects" (updater MainMenu) <| renderPersonalProjects theme
+                    renderSubPageLayout theme (read lang "mywork_personal" mainCorpus) (updater MainMenu) <| renderPersonalProjects theme lang
 
                 Research ->
-                    renderSubPageLayout theme "Research" (updater MainMenu) <| text "hello world"
+                    renderSubPageLayout theme (read lang "mywork_research" mainCorpus) (updater MainMenu) <| text "hello world"
 
                 IndustrialExperience ->
-                    renderSubPageLayout theme "Industrial Experience" (updater MainMenu) <| text "hello world"
+                    renderSubPageLayout theme (read lang "mywork_industrial" mainCorpus) (updater MainMenu) <| text "hello world"
     in
     div
         [ css

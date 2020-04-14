@@ -9,6 +9,7 @@ import Css.Transitions exposing (transition)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
+import TextResource exposing (Language, mainCorpus, read)
 import Theme exposing (Theme)
 
 
@@ -19,22 +20,22 @@ type Page
     | Minsky
 
 
-renderOptionButton : Theme -> Page -> ( Page, msg ) -> Html msg
-renderOptionButton theme currentPage ( page, msg ) =
+renderOptionButton : Theme -> Language -> Page -> ( Page, msg ) -> Html msg
+renderOptionButton theme lang currentPage ( page, msg ) =
     let
         title =
             case page of
                 AboutMe ->
-                    "About Me"
+                    read lang "aboutme" mainCorpus
 
                 MyInterests ->
-                    "My Interests"
+                    read lang "myinterests" mainCorpus
 
                 MyWork _ ->
-                    "My work"
+                    read lang "mywork" mainCorpus
 
                 Minsky ->
-                    "Minsky"
+                    read lang "minsky" mainCorpus
     in
     div
         [ css
@@ -91,19 +92,19 @@ pages =
     ]
 
 
-renderPages : Theme -> Page -> (Page -> msg) -> Html msg
-renderPages theme currentPage updatePage =
+renderPages : Theme -> Language -> Page -> (Page -> msg) -> Html msg
+renderPages theme lang currentPage updatePage =
     let
         optionsBar =
             if theme.device == Theme.Phone then
                 [ div []
-                    [ renderOptionButton theme currentPage <| ( currentPage, updatePage currentPage )
+                    [ renderOptionButton theme lang currentPage <| ( currentPage, updatePage currentPage )
                     ]
                 ]
 
             else
                 List.map (\page -> ( page, updatePage page )) pages
-                    |> List.map (renderOptionButton theme currentPage)
+                    |> List.map (renderOptionButton theme lang currentPage)
     in
     div
         [ css
@@ -131,16 +132,16 @@ renderPages theme currentPage updatePage =
             [ div []
                 [ case currentPage of
                     AboutMe ->
-                        aboutBody theme
+                        aboutBody theme lang
 
                     MyInterests ->
-                        myInterestsBody
+                        myInterestsBody lang
 
                     MyWork currentWork ->
-                        renderMyWorkPage theme currentWork <| \w -> updatePage (MyWork w)
+                        renderMyWorkPage theme lang currentWork <| \w -> updatePage (MyWork w)
 
                     Minsky ->
-                        minskyBody theme
+                        minskyBody theme lang
                 ]
             ]
         ]
