@@ -1,0 +1,36 @@
+kind: pipeline
+type: kubernetes
+name: minsky-landing
+steps:
+  - name: docker-registry
+    image: plugins/docker
+    settings:
+      repo: docker.minsky.cc/bregy/personalpage
+      registry: docker.minsky.cc
+      tags: latest
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      branch:
+        - master
+
+  # - name: update
+  #   image: vallard/drone-kube
+  #   template: k8s.yaml
+  #   when:
+  #     branch:
+  #       - master
+
+  - name: telegram-notification
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_to_id
+    when:
+      status:
+        - failure
+        - success
