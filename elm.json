@@ -1,8 +1,6 @@
 {
     "type": "application",
-    "source-directories": [
-        "src"
-    ],
+    "source-directories": ["src"],
     "elm-version": "0.19.1",
     "dependencies": {
         "direct": {
@@ -14,10 +12,9 @@
             "justinmimbs/time-extra": "1.1.0",
             "mdgriffith/elm-animator": "1.0.1",
             "myrho/elm-round": "1.0.4",
-            "rtfeldman/elm-css": "16.0.1"
+            "rtfeldman/elm-css": "16.1.0"
         },
         "indirect": {
-            "Skinney/murmur3": "2.0.8",
             "avh4/elm-color": "1.0.0",
             "elm/json": "1.1.2",
             "elm/parser": "1.1.0",
