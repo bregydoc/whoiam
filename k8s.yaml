@@ -1,8 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-    name: personalpage
-    namespace: bregy
+    name: bregypage
+    namespace: minsky
     annotations:
         kubernetes.io/ingress.class: traefik
         cert-manager.io/cluster-issuer: buypass
@@ -17,18 +17,18 @@ spec:
               paths:
                   - path: /
                     backend:
-                        serviceName: personalpage
+                        serviceName: bregypage
                         servicePort: web
 
 ---
 kind: Service
 apiVersion: v1
 metadata:
-    name: personalpage
-    namespace: bregy
+    name: bregypage
+    namespace: minsky
 spec:
     selector:
-        app: personalpage
+        app: bregypage
     type: ClusterIP
     ports:
         - name: web
@@ -39,25 +39,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: landpersonalpageing
-    namespace: bregy
+    name: bregy-personal-page
+    namespace: minsky
     labels:
-        app: personalpage
+        app: bregypage
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: personalpage
+            app: bregypage
     template:
         metadata:
-            name: personalpage
+            name: bregypage
             labels:
-                app: personalpage
+                app: bregypage
         spec:
             imagePullSecrets:
                 - name: regcred
             containers:
-                - name: personalpage
+                - name: bregypage
                   image: docker.minsky.cc/bregy
                   imagePullPolicy: Always
             restartPolicy: Always
