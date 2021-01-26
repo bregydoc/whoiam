@@ -1,3 +1,21 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: bregypage
+  namespace: minsky
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`bregy.minsky.cc`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: bregypage
+          port: 80
+  tls:
+    certResolver: letsencrypt
+
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
