@@ -1,81 +1,63 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: bregypage
-  namespace: minsky
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`bregy.minsky.cc`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: bregypage
-          port: 80
-  tls:
-    certResolver: letsencrypt
-
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-    name: bregypage
-    namespace: minsky
-    annotations:
-        kubernetes.io/ingress.class: traefik
-        cert-manager.io/cluster-issuer: buypass
+  name: bregypage
+  namespace: minsky
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: buypass
 spec:
-    tls:
-        - hosts:
-              - bregy.minsky.cc
-          secretName: bregy.minsky.cc-cert
-    rules:
-        - host: bregy.minsky.cc
-          http:
-              paths:
-                  - path: /
-                    backend:
-                        serviceName: bregypage
-                        servicePort: web
+  tls:
+    - hosts:
+        - bregy.minsky.cc
+      secretName: bregy.minsky.cc-cert
+  rules:
+    - host: bregy.minsky.cc
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: bregypage
+              servicePort: web
 
 ---
 kind: Service
 apiVersion: v1
 metadata:
-    name: bregypage
-    namespace: minsky
+  name: bregypage
+  namespace: minsky
 spec:
-    selector:
-        app: bregypage
-    type: ClusterIP
-    ports:
-        - name: web
-          port: 80
-          targetPort: 80
+  selector:
+    app: bregypage
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: bregy-personal-page
-    namespace: minsky
-    labels:
-        app: bregypage
+  name: bregy-personal-page
+  namespace: minsky
+  labels:
+    app: bregypage
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: bregypage
-    template:
-        metadata:
-            name: bregypage
-            labels:
-                app: bregypage
-        spec:
-            imagePullSecrets:
-                - name: regcred
-            containers:
-                - name: bregypage
-                  image: docker.minsky.cc/bregy
-                  imagePullPolicy: Always
-            restartPolicy: Always
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bregypage
+  template:
+    metadata:
+      name: bregypage
+      labels:
+        app: bregypage
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: bregypage
+          image: docker.minsky.cc/bregy
+          imagePullPolicy: Always
+      restartPolicy: Always
